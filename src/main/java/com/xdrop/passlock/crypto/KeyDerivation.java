@@ -8,7 +8,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public class KeyDerivation {
@@ -16,32 +15,34 @@ public class KeyDerivation {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeyDerivation.class);
 
-    public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA256";
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA256";
 
-    /* The size in bytes of the salt and the hash */
-    private static final int SALT_BYTES = 8;
+    /* The key length */
     private static final int KEY_BYTES = 128;
+
+    /* The number of iterations PBKDF2 should perfom */
     private static final int ITERATIONS = 3000;
 
 
-
-    private static byte[] generateSalt(int bytes) {
-
-        // Generate a random salt
-        SecureRandom random = new SecureRandom();
-
-        // Serve the bytes in a fresh array
-        byte[] salt = new byte[bytes];
-        random.nextBytes(salt);
-
-        return salt;
-    }
-
-
+    /**
+     * Derives a PBEKeySpec from the given password and salt
+     *
+     * @param password
+     * @param salt
+     * @return
+     */
     private static PBEKeySpec deriveKeySpec(char[] password, byte[] salt){
         return new PBEKeySpec(password, salt, ITERATIONS, KEY_BYTES);
     }
 
+    /**
+     * Generates an AES SecretKey through via a password and salt. The secret is
+     * consistent as long as the password and salt passed are consistent.
+     *
+     * @param password
+     * @param salt
+     * @return
+     */
     public static SecretKey generateAESSecret(char[] password, byte[] salt){
 
         try {
