@@ -26,7 +26,7 @@ public class AESEncrypt {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      */
-    public AESOutput encrypt(byte[] payload, SecretKey key) throws BadPaddingException, IllegalBlockSizeException {
+    public AESOutput encrypt(byte[] payload, SecretKey key) {
 
         try {
 
@@ -43,6 +43,8 @@ public class AESEncrypt {
         } catch (NoSuchAlgorithmException |
                 NoSuchPaddingException |
                 InvalidKeyException |
+                BadPaddingException |
+                IllegalBlockSizeException |
                 InvalidParameterSpecException e) {
 
             LOG.info("Failed to encrypt", e);
