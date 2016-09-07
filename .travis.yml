@@ -4,4 +4,4 @@ sudo: false
 jdk:
   - openjdk7
 
-script: mvn clean verify
+script: mvn clean install
