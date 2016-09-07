@@ -1,16 +1,17 @@
 package com.xdrop.passlock.datasource.sqlite;
 
+import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.datasource.Datasource;
 import com.xdrop.passlock.model.PasswordEntry;
 import com.xdrop.passlock.search.FuzzySearcher;
 
-public class SQLiteDatasource implements Datasource {
+public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
-    public PasswordEntry getPass(String ref) {
+    public PasswordEntry<AESEncryptionData> getPass(String ref) {
         return null;
     }
 
-    public PasswordEntry getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) {
+    public PasswordEntry<AESEncryptionData> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) {
         return null;
     }
 
@@ -22,7 +23,7 @@ public class SQLiteDatasource implements Datasource {
 
     }
 
-    public void addPass(String ref, String encryptedPass) {
+    public void addPass(String ref, PasswordEntry<AESEncryptionData> passwordEntry) {
 
     }
 

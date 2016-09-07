@@ -5,16 +5,16 @@ import org.easymock.EasyMock
 import org.junit.Before
 import org.junit.Test
 
-class SQLiteDatasourceTest extends GroovyTestCase {
+class SQLiteAESDatasourceTest extends GroovyTestCase {
 
-    def datasource = new SQLiteDatasource();
+    def datasource = new SQLiteAESDatasource();
 
 
     @Before
     protected void setUp() {
         datasource.initialize()
-        datasource.addPass("www.google.com", "googlepass");
-        datasource.addPass("www.facebook.com", "facebookpass");
+        datasource.addPass("www.google.com");
+        datasource.addPass("www.facebook.com");
     }
 
     @Test
@@ -49,7 +49,7 @@ class SQLiteDatasourceTest extends GroovyTestCase {
 
         def encrypted = "b34njh234987sjhds76232h"
 
-        datasource.addPass("www.bing.com", encrypted)
+        datasource.addPass("www.bing.com")
 
         assertEquals datasource.getPass("www.bing.com").password, encrypted.toCharArray()
 
