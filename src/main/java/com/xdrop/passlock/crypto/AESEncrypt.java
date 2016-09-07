@@ -23,8 +23,6 @@ public class AESEncrypt {
      * @param payload The byte array of data to be encrypted
      * @param key The key with which the data should be encrypted
      * @return The encrypted payload and the IV vector
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
      */
     public AESOutput encrypt(byte[] payload, SecretKey key) {
 
