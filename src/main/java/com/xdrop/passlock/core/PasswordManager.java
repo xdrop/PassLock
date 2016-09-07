@@ -1,4 +1,6 @@
 package com.xdrop.passlock.core;
+import org.apache.commons.codec.binary.Base64;
+
 
 import com.xdrop.passlock.crypto.EncryptionModel;
 import com.xdrop.passlock.crypto.aes.AESEncryptionData;
@@ -27,6 +29,11 @@ public class PasswordManager {
 
         Datasource<AESEncryptionData> datasource = new SQLiteAESDatasource();
         datasource.addPass(reference, passwordEntry);
+
+
+        byte[] b64 = Base64.encodeBase64(encryptionData.getEncryptedPayload());
+
+        System.out.println(new String(b64));
 
     }
 

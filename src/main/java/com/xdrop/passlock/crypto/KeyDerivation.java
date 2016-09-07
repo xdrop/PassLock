@@ -16,7 +16,7 @@ public class KeyDerivation {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeyDerivation.class);
 
-    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA256";
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     /* The key length */
     private static final int KEY_BYTES = 128;

@@ -2,6 +2,7 @@ package com.xdrop.passlock.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.datasource.sqlite.SQLiteConnection;
 import com.xdrop.passlock.exceptions.CommandException;
 
@@ -25,8 +26,8 @@ public class AddCommand implements Command {
             throw new CommandException("Invalid number of arguments.");
         }
 
-        SQLiteConnection.connect();
-
+        PasswordManager passwordManager = new PasswordManager();
+        passwordManager.addPassword(description, newPassword.toCharArray(), name.get(0));
 
         System.out.println(description+ " : " + newPassword
                             + " : " + name.get(0) );
