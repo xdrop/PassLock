@@ -19,13 +19,37 @@
             </plugin>
             <!-- tests -->
             <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>groovy-maven-plugin</artifactId>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <testSources>
+                    <testSource>
+                        <directory>${project.basedir}/src/test/groovy</directory>
+                        <includes>
+                            <include>**/*.groovy</include>
+                        </includes>
+                    </testSource>
+                    </testSources>
+                </configuration>
+
+
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
+                        <!-- any version of Groovy \>= 1.5.0 should work here -->
                         <version>2.4.6</version>
+                        <scope>runtime</scope>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -90,7 +114,9 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
+            <!-- any version of Groovy \>= 1.5.0 should work here -->
             <version>2.4.6</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>
