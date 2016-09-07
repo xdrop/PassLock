@@ -2,23 +2,23 @@ package com.xdrop.passlock.model;
 
 public abstract class EncryptionData {
 
-    private char[] encryptedPayload;
+    private byte[] encryptedPayload;
 
-    private char[] salt;
+    private byte[] salt;
 
-    public char[] getEncryptedPayload() {
+    public byte[] getEncryptedPayload() {
         return encryptedPayload;
     }
 
-    public char[] getSalt() {
+    public byte[] getSalt() {
         return salt;
     }
 
-    public void setSalt(char[] salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 
-    public void setEncryptedPayload(char[] encryptedPayload) {
+    public void setEncryptedPayload(byte[] encryptedPayload) {
         this.encryptedPayload = encryptedPayload;
     }
 }

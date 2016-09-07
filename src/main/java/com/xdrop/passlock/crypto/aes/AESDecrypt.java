@@ -24,14 +24,14 @@ public class AESDecrypt {
      * @return The raw decrypted data
      * @throws InvalidKeyException Thrown in case the key is invalid
      */
-    public byte[] decrypt(AESOutput aesOutput, SecretKey secretKey) throws InvalidKeyException {
+    public byte[] decrypt(AESEncryptionData aesOutput, SecretKey secretKey) throws InvalidKeyException {
 
         try {
 
             Cipher cipher = Cipher.getInstance(cipherType);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(aesOutput.getIv()));
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(aesOutput.getInitilizationVector()));
 
-            return cipher.doFinal(aesOutput.getOutput());
+            return cipher.doFinal(aesOutput.getEncryptedPayload());
 
         } catch (NoSuchAlgorithmException |
                 NoSuchPaddingException |

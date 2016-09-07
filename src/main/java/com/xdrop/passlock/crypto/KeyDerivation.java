@@ -8,6 +8,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public class KeyDerivation {
@@ -23,6 +24,34 @@ public class KeyDerivation {
     /* The number of iterations PBKDF2 should perfom */
     private static final int ITERATIONS = 3000;
 
+    /* The default salt size */
+    private static final int SALT_BYTES = 8;
+
+
+    /**
+     * Generates a random salt of given length
+     *
+     * @return
+     */
+    public static byte[] generateSalt(int length){
+
+        SecureRandom secureRandom = new SecureRandom();
+
+        byte[] salt = new byte[length];
+        secureRandom.nextBytes(salt);
+
+        return salt;
+
+    }
+
+    /**
+     * Generates a random salt of default length
+     *
+     * @return
+     */
+    public static byte[] generateSalt(){
+        return generateSalt(SALT_BYTES);
+    }
 
     /**
      * Derives a PBEKeySpec from the given password and salt

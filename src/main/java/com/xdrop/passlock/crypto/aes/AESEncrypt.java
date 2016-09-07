@@ -24,7 +24,7 @@ public class AESEncrypt {
      * @param key The key with which the data should be encrypted
      * @return The encrypted payload and the IV vector
      */
-    public AESOutput encrypt(byte[] payload, SecretKey key) {
+    public AESEncryptionData encrypt(byte[] payload, SecretKey key) {
 
         try {
 
@@ -36,7 +36,11 @@ public class AESEncrypt {
 
             byte[] output = cipher.doFinal(payload);
 
-            return new AESOutput(output, iv);
+            AESEncryptionData aesEncryptionData = new AESEncryptionData();
+            aesEncryptionData.setInitilizationVector(iv);
+            aesEncryptionData.setEncryptedPayload(output);
+
+            return aesEncryptionData;
 
         } catch (NoSuchAlgorithmException |
                 NoSuchPaddingException |
