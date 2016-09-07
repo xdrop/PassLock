@@ -1,17 +1,18 @@
 package com.xdrop.passlock.datasource;
 
-import com.xdrop.passlock.model.Password;
+import com.xdrop.passlock.model.EncryptionData;
+import com.xdrop.passlock.model.PasswordEntry;
 import com.xdrop.passlock.search.FuzzySearcher;
 
 public interface Datasource {
 
-    Password getPass(String ref);
+    PasswordEntry<? extends EncryptionData> getPass(String ref);
 
-    Password getPass(String fuzzyRef, FuzzySearcher fuzzySearcher);
+    PasswordEntry<? extends EncryptionData> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher);
 
     void delPass(String ref);
 
-    void updatePass(String ref, Password newPass);
+    void updatePass(String ref, PasswordEntry<? extends EncryptionData> newPasswordEntry);
 
     void addPass(String ref, String encryptedPass);
 

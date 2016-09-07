@@ -1,4 +1,4 @@
-package com.xdrop.passlock.crypto;
+package com.xdrop.passlock.crypto.aes;
 
 public class AESOutput {
 

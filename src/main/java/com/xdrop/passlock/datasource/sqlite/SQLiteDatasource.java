@@ -1,16 +1,16 @@
 package com.xdrop.passlock.datasource.sqlite;
 
 import com.xdrop.passlock.datasource.Datasource;
-import com.xdrop.passlock.model.Password;
+import com.xdrop.passlock.model.PasswordEntry;
 import com.xdrop.passlock.search.FuzzySearcher;
 
 public class SQLiteDatasource implements Datasource {
 
-    public Password getPass(String ref) {
+    public PasswordEntry getPass(String ref) {
         return null;
     }
 
-    public Password getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) {
+    public PasswordEntry getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) {
         return null;
     }
 
@@ -18,7 +18,7 @@ public class SQLiteDatasource implements Datasource {
 
     }
 
-    public void updatePass(String ref, Password newPass) {
+    public void updatePass(String ref, PasswordEntry newPasswordEntry) {
 
     }
 

@@ -1,4 +1,4 @@
-package com.xdrop.passlock.crypto;
+package com.xdrop.passlock.crypto.aes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

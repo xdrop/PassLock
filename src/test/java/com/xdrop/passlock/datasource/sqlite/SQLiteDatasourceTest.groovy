@@ -25,12 +25,12 @@ class SQLiteDatasourceTest extends GroovyTestCase {
         EasyMock.expect(fuzzySearcher.search("google", ["www.google.com"])).andReturn("googlepass");
         EasyMock.replay(fuzzySearcher);
 
-        assertEquals datasource.getPass("google", fuzzySearcher), "googlepass";
+        assertEquals datasource.getPass("google", fuzzySearcher).encryptionData.encryptedPayload, "googlepass".toCharArray();
     }
 
     @Test
     void testGetPassExact() {
-        assertEquals datasource.getPass("www.google.com"), "googlepass";
+        assertEquals "googlepass".toCharArray(), datasource.getPass("www.google.com");
     }
 
     void testDelPass() {

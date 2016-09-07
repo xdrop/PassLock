@@ -1,7 +1,6 @@
 package com.xdrop.passlock.logic;
 
 import com.xdrop.passlock.datasource.Datasource;
-import com.xdrop.passlock.model.Password;
 import com.xdrop.passlock.search.FuzzySearcher;
 
 public class PasswordManager {
@@ -11,7 +10,7 @@ public class PasswordManager {
 
     public String searchPassword(String searchString){
         datasource.getPass(searchString, fuzzySearcher);
-        return "Password: ";
+        return "PasswordEntry: ";
     }
 
 }

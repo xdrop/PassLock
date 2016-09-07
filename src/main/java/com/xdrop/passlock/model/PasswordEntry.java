@@ -2,21 +2,14 @@ package com.xdrop.passlock.model;
 
 import java.util.Date;
 
-public class Password {
+public class PasswordEntry<T extends EncryptionData> {
 
-    private char[] password;
+    private T encryptionData;
     private Date date;
     private String description;
     private String ref;
     private String id;
 
-    public char[] getPassword() {
-        return password;
-    }
-
-    public void setPassword(char[] password) {
-        this.password = password;
-    }
 
     public Date getDate() {
         return date;
@@ -48,5 +41,13 @@ public class Password {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public T getEncryptionData() {
+        return encryptionData;
+    }
+
+    public void setEncryptionData(T encryptionData) {
+        this.encryptionData = encryptionData;
     }
 }
