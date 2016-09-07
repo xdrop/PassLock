@@ -1,5 +1,7 @@
 package com.xdrop.passlock.datasource.sqlite
 
+import com.xdrop.passlock.crypto.aes.AESEncryptionData
+import com.xdrop.passlock.model.PasswordEntry
 import com.xdrop.passlock.search.FuzzySearcher
 import org.easymock.EasyMock
 import org.junit.Before
@@ -13,8 +15,12 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
     @Before
     protected void setUp() {
         datasource.initialize()
-        datasource.addPass("www.google.com");
-        datasource.addPass("www.facebook.com");
+        def passwordEntry = new PasswordEntry<AESEncryptionData>();
+        passwordEntry.ref = "www.bing.com"
+        passwordEntry.description = "description example"
+        datasource.addPass("www.bing.com", passwordEntry)
+        datasource.addPass("www.google.com", passwordEntry)
+        datasource.addPass("www.facebook.com", passwordEntry)
     }
 
     @Test
@@ -49,9 +55,12 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
         def encrypted = "b34njh234987sjhds76232h"
 
-        datasource.addPass("www.bing.com")
+        def passwordEntry = new PasswordEntry<AESEncryptionData>();
+        passwordEntry.ref = "www.bing.com"
+        passwordEntry.description = "description example"
+        datasource.addPass("www.bing.com", passwordEntry)
 
-        assertEquals datasource.getPass("www.bing.com").password, encrypted.toCharArray()
+        assertEquals datasource.getPass("www.bing.com"), passwordEntry
 
     }
 
@@ -61,6 +70,7 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
         datasource.addPass("www.bing.com", "...", desc)
 
+        assertNotNull datasource.getPass("www.bing.com")
         assertEquals datasource.getPass("www.bing.com").getDescription(), desc
 
     }
