@@ -29,4 +29,9 @@ public class SQLiteDatasource implements Datasource {
     public void addPass(String ref, String encryptedPass, String desc) {
 
     }
+
+    @Override
+    public void initialize() {
+
+    }
 }

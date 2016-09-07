@@ -17,4 +17,6 @@ public interface Datasource {
 
     void addPass(String ref, String encryptedPass, String desc);
 
+    void initialize();
+
 }
