@@ -1,2 +1,7 @@
 language: java
-mvn test
+sudo: false
+
+jdk:
+  - openjdk7
+
+script: mvn clean verify
