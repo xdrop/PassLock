@@ -37,7 +37,7 @@ public class PassLock {
         MainCommand cm = new MainCommand();
         JCommander jc = new JCommander(cm);
 
-        AddCommand addCommand = new AddCommand();
+        AddCommand addCommand = new AddCommand(System.out);
         jc.addCommand("add", addCommand);
         DeleteCommand deleteCommand = new DeleteCommand();
         jc.addCommand("delete", addCommand);

@@ -6,6 +6,9 @@ import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.datasource.sqlite.SQLiteConnection;
 import com.xdrop.passlock.exceptions.CommandException;
 
+import java.io.Console;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Parameters(commandDescription = "Adds a new password")
@@ -20,16 +23,30 @@ public class AddCommand implements Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
+    private Console console;
+    private PrintWriter pw;
+
+    public AddCommand(OutputStream out) {
+        this.console = System.console();
+        this.pw = new PrintWriter(out);
+    }
+
     public void execute() throws CommandException {
 
-        if(name.size() != 1){
+        if(name.size() != 1 || name == null){
             throw new CommandException("Invalid number of arguments.");
         }
 
         PasswordManager passwordManager = new PasswordManager();
-        passwordManager.addPassword(description, newPassword.toCharArray(), name.get(0));
 
-        System.out.println(description+ " : " + newPassword
-                            + " : " + name.get(0) );
+        pw.write("Please enter your master password:\n");
+        pw.flush();
+
+        char[] masterPassword = console.readPassword();
+
+        passwordManager.addPassword(description,
+                newPassword.toCharArray(),
+                masterPassword, name.get(0));
+
     }
 }
