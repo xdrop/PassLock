@@ -13,11 +13,11 @@ import com.xdrop.passlock.utils.ByteUtils;
 
 public class PasswordManager {
 
-    public void addPassword(String description, char[] newPassword, String reference){
+    public void addPassword(String description, char[] newPassword, char[] masterPass, String reference){
 
         EncryptionModel<AESEncryptionData> encryptionModel = new AESEncryptionModel();
 
-        AESEncryptionData encryptionData = encryptionModel.encrypt(ByteUtils.getBytes(newPassword), pass.toCharArray());
+        AESEncryptionData encryptionData = encryptionModel.encrypt(ByteUtils.getBytes(newPassword), masterPass);
 
         PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
         passwordEntry.setDescription(description);
