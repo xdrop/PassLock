@@ -1,5 +1,6 @@
 package com.xdrop.passlock.datasource.sqlite
 
+import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.PassLock
 import com.xdrop.passlock.crypto.aes.AESEncryptionData
 import com.xdrop.passlock.exceptions.RefNotFoundException
@@ -11,7 +12,7 @@ import org.easymock.EasyMock
 import org.junit.Before
 import org.junit.Test
 
-class SQLiteAESDatasourceTest extends GroovyTestCase {
+class SQLiteAESDatasourceTest extends LogGroovyTestCase {
 
     def datasource = new SQLiteAESDatasource();
 

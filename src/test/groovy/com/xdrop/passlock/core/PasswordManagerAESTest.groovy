@@ -1,12 +1,13 @@
 package com.xdrop.passlock.core
 
+import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.PassLock
 import com.xdrop.passlock.utils.ByteUtils
 import org.apache.log4j.PropertyConfigurator
 
 import java.security.InvalidKeyException
 
-class PasswordManagerAESTest extends GroovyTestCase {
+class PasswordManagerAESTest extends LogGroovyTestCase {
 
     def pwman = new PasswordManagerAES();
     def masterPass = "mymaster";
@@ -15,8 +16,6 @@ class PasswordManagerAESTest extends GroovyTestCase {
     void setUp() {
 
         super.setUp()
-
-        PropertyConfigurator.configure(PassLock.loadPropertiesFile("log.properties"));
 
         pwman.initializeDatasource(masterPass.toCharArray())
 

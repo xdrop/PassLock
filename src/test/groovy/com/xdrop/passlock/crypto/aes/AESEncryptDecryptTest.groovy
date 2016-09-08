@@ -1,10 +1,11 @@
 package com.xdrop.passlock.crypto.aes
 
+import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.utils.ByteUtils
 import com.xdrop.passlock.utils.KeyUtils
 import org.junit.Before
 
-class AESEncryptDecryptTest extends GroovyTestCase {
+class AESEncryptDecryptTest extends LogGroovyTestCase {
 
     def SECRET_KEY = "7xqBQI1RrRWczoLlS++26Q==";
     def SALT = "uzdvIH/Ithk=";

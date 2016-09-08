@@ -25,7 +25,7 @@ public class SQLiteConnection {
             // create a connection to the database
             cachedConnection = DriverManager.getConnection(jdbcUrl);
 
-            LOG.info("Connection to SQLite has been established.");
+            LOG.debug("Connection to SQLite has been established.");
 
         } catch (SQLException e) {
 

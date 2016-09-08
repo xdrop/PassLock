@@ -29,6 +29,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         datasource = new SQLiteAESDatasource();
         encryptionModel = new AESEncryptionModel();
+
     }
 
     @Override
@@ -41,12 +42,16 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     @Override
     public void addPassword(String description, byte[] newPassword, char[] masterPass, String reference) {
 
+        LOG.debug("Encrypting entry [" + reference + "]...");
+
         AESEncryptionData encryptionData = encryptionModel.encrypt(newPassword, masterPass);
 
         PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
         passwordEntry.setDescription(description);
         passwordEntry.setRef(reference);
         passwordEntry.setEncryptionData(encryptionData);
+
+        LOG.debug("Storing in datasource...");
 
         datasource.addPass(reference, passwordEntry);
 
@@ -56,9 +61,13 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     public byte[] getPassword(String ref, boolean searchFuzzy, char[] password)
             throws RefNotFoundException, InvalidKeyException {
 
+        LOG.debug("Looking for " + ref +"...");
+
         if (!searchFuzzy) {
 
             PasswordEntry<AESEncryptionData> pass = datasource.getPass(ref);
+
+            LOG.debug("Decrypting with key...");
 
             return encryptionModel.decrypt(pass.getEncryptionData(), password);
 
@@ -70,14 +79,20 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     @Override
     public void initializeDatasource(char[] master) {
 
+        LOG.info("Initializing datasource...");
+
         /* Initialize the datasource */
         datasource.reset();
         datasource.initialize();
+
+        LOG.info("Generating AES secret...");
 
         /* Store the master key */
         SecretKey secretKey = encryptionModel.generateSecret(master);
 
         addPassword("The master key", secretKey.getEncoded(), master, "master");
+
+        LOG.info("AES secret succesfully stored!");
 
     }
 
@@ -91,7 +106,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         } catch (RefNotFoundException e) {
 
-            LOG.debug("Master key not found", e);
+            LOG.error("Master key not found", e);
             return false;
 
         } catch (InvalidKeyException e) {
@@ -107,11 +122,13 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         try {
 
+            LOG.debug("Retrieving master key...");
+
             return ByteUtils.getChars(getPassword("master", false, password));
 
         } catch (RefNotFoundException e) {
 
-            LOG.debug("Master key not found", e);
+            LOG.error("Master key not found", e);
             return null;
 
         }
