@@ -1,3 +1,4 @@
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 JARPATH="$BASEDIR/passlock.jar"
 java -jar $JARPATH
