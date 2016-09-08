@@ -1,10 +1,11 @@
 package com.xdrop.passlock.datasource.sqlite
 
+import com.xdrop.passlock.PassLock
 import com.xdrop.passlock.crypto.aes.AESEncryptionData
-import com.xdrop.passlock.model.EncryptionData
 import com.xdrop.passlock.model.PasswordEntry
 import com.xdrop.passlock.search.FuzzySearcher
 import com.xdrop.passlock.utils.ByteUtils
+import org.apache.log4j.PropertyConfigurator
 import org.easymock.EasyMock
 import org.junit.Before
 import org.junit.Test
@@ -13,11 +14,13 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
     def datasource = new SQLiteAESDatasource();
 
-
-
-
     @Before
     protected void setUp() {
+
+        PropertyConfigurator.configure(PassLock.loadPropertiesFile("log.properties"));
+
+        datasource.reset()
+
         datasource.initialize()
 
         def passwordEntry = new PasswordEntry<AESEncryptionData>();
@@ -40,7 +43,7 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
         def fuzzySearcher = EasyMock.createMock(FuzzySearcher.class);
 
-        EasyMock.expect(fuzzySearcher.search("google", ["www.google.com"])).andReturn("www.google.com");
+        EasyMock.expect(fuzzySearcher.search(EasyMock.eq("google"), EasyMock.anyObject(List.class))).andReturn("www.google.com");
         EasyMock.replay(fuzzySearcher);
 
         def passentry = datasource.getPass("google", fuzzySearcher)

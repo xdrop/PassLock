@@ -13,7 +13,7 @@ import java.util.Properties;
 public class PassLock {
 
 
-    private static Properties loadPropertiesFile(String filename) {
+    public static Properties loadPropertiesFile(String filename) {
 
         Properties properties = new Properties();
         InputStream in;
