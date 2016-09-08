@@ -1,6 +1,5 @@
 package com.xdrop.passlock.datasource.sqlite;
 
-import com.xdrop.passlock.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +13,15 @@ public class SQLiteConnection {
 
     private final static String jdbcUrl = "jdbc:sqlite:store.db";
 
-    private static Connection cachedConnection;
 
     public static Connection connect() {
 
-        if(cachedConnection != null) return cachedConnection;
+        Connection connection = null;
 
         try {
 
             // create a connection to the database
-            cachedConnection = DriverManager.getConnection(jdbcUrl);
+            connection = DriverManager.getConnection(jdbcUrl);
 
             LOG.info("Connection to SQLite has been established.");
 
@@ -33,8 +31,9 @@ public class SQLiteConnection {
 
         }
 
-        return cachedConnection;
+        return connection;
     }
+
 
 
 }
