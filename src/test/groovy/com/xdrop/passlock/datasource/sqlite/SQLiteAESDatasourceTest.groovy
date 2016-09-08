@@ -2,6 +2,7 @@ package com.xdrop.passlock.datasource.sqlite
 
 import com.xdrop.passlock.PassLock
 import com.xdrop.passlock.crypto.aes.AESEncryptionData
+import com.xdrop.passlock.exceptions.RefNotFoundException
 import com.xdrop.passlock.model.PasswordEntry
 import com.xdrop.passlock.search.FuzzySearcher
 import com.xdrop.passlock.utils.ByteUtils
@@ -71,16 +72,16 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
         datasource.delPass("www.google.com");
 
-        assertNull(datasource.getPass("www.google.com"));
+        shouldFail(RefNotFoundException){
+            datasource.getPass("www.google.com")
+        }
+
 
     }
 
     void testUpdatePass() {
 
-        def passwordEntry = new PasswordEntry<AESEncryptionData>();
-
-        passwordEntry.ref = "www.bing.com"
-        passwordEntry.description = "updated example"
+        def passwordEntry = dummyPasswordEntry("www.bing.com", "updated example")
 
         datasource.updatePass("www.bing.com", passwordEntry)
 
@@ -94,15 +95,7 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
     void testAddPass() {
 
-        def passwordEntry = new PasswordEntry<AESEncryptionData>();
-
-        passwordEntry.ref = "www.new.com"
-        passwordEntry.description = "description example"
-
-        passwordEntry.encryptionData = new AESEncryptionData();
-        passwordEntry.encryptionData.initilizationVector = ByteUtils.fromBase64("iv==")
-        passwordEntry.encryptionData.salt = ByteUtils.fromBase64("salt==")
-        passwordEntry.encryptionData.encryptedPayload = ByteUtils.fromBase64("enc==")
+        PasswordEntry<AESEncryptionData> passwordEntry = dummyPasswordEntry("www.new.com", "description example")
 
         datasource.addPass("www.new.com", passwordEntry)
 
@@ -113,6 +106,19 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
         assertEquals get.ref, "www.new.com"
         assertEquals get.description, "description example"
 
+    }
+
+    private static PasswordEntry<AESEncryptionData> dummyPasswordEntry(String ref, String desc) {
+        def passwordEntry = new PasswordEntry<AESEncryptionData>();
+
+        passwordEntry.ref = ref
+        passwordEntry.description = desc
+
+        passwordEntry.encryptionData = new AESEncryptionData();
+        passwordEntry.encryptionData.initilizationVector = ByteUtils.fromBase64("iv==")
+        passwordEntry.encryptionData.salt = ByteUtils.fromBase64("salt==")
+        passwordEntry.encryptionData.encryptedPayload = ByteUtils.fromBase64("enc==")
+        passwordEntry
     }
 
     void testInitialize() {

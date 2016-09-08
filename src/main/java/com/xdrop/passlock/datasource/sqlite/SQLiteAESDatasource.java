@@ -2,6 +2,7 @@ package com.xdrop.passlock.datasource.sqlite;
 
 import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.datasource.Datasource;
+import com.xdrop.passlock.exceptions.InvalidDataException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 import com.xdrop.passlock.model.PasswordEntry;
 import com.xdrop.passlock.search.FuzzySearcher;
@@ -17,17 +18,18 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     private final static Logger LOG = LoggerFactory.getLogger(SQLiteAESDatasource.class);
 
-    private Connection sqLiteConnection = SQLiteConnection.connect();
+    private Connection con = SQLiteConnection.connect();
 
     public PasswordEntry<AESEncryptionData> getPass(String ref) throws RefNotFoundException {
 
         String sql = "SELECT * FROM passwords WHERE ref = ? LIMIT 1";
+
         PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
         AESEncryptionData encryptionData = new AESEncryptionData();
 
         try{
 
-            PreparedStatement statement = sqLiteConnection.prepareStatement(sql);
+            PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setString(1, ref);
             statement.execute();
@@ -47,9 +49,11 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
                 passwordEntry.setEncryptionData(encryptionData);
 
                 assert(passwordEntry.getRef().equals(ref));
+                statement.close();
 
                 return passwordEntry;
             } else{
+                statement.close();
                 throw new RefNotFoundException();
             }
 
@@ -57,8 +61,8 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             LOG.debug("SQL failed to get", e);
         }
 
-
         return null;
+
     }
 
     public PasswordEntry<AESEncryptionData> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher)
@@ -68,7 +72,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         try{
 
-            Statement statement = sqLiteConnection.createStatement();
+            Statement statement = con.createStatement();
             statement.execute(sql);
 
             ResultSet rs = statement.getResultSet();
@@ -79,6 +83,8 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             while(rs.next()){
                 candidates.add(rs.getString("ref"));
             }
+
+            statement.close();
 
             String ref = fuzzySearcher.search(fuzzyRef, candidates);
 
@@ -95,35 +101,94 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         return null;
     }
 
-    public void delPass(String ref) {
+    public void delPass(String ref) throws RefNotFoundException {
+
+        String sql = "DELETE FROM passwords WHERE ref=?";
+
+        try{
+
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+
+            preparedStatement.setString(1, ref);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            if(affectedRows < 1){
+                throw new RefNotFoundException();
+            }
+
+        } catch (SQLException e) {
+
+            LOG.info("Failed to delete", e);
+
+        }
 
     }
 
-    public void updatePass(String ref, PasswordEntry newPasswordEntry) {
+    public void updatePass(String ref, PasswordEntry<AESEncryptionData> newPasswordEntry) throws RefNotFoundException {
+
+        if(!validate(newPasswordEntry)) throw new InvalidDataException();
+
+        String sql = "UPDATE passwords SET ref=?, description=?, payload=?, salt=?, iv=?, algo=?" +
+                "WHERE ref=?";
+        AESEncryptionData aesEncryptionData = newPasswordEntry.getEncryptionData();
+
+        try{
+
+            PreparedStatement preparedStatement = bindPreparedStatement(ref, newPasswordEntry, sql, aesEncryptionData);
+
+            preparedStatement.setString(7, ref);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            if(affectedRows < 1){
+                throw new RefNotFoundException();
+            }
+
+
+        } catch (SQLException e) {
+            LOG.info("Failed to update", e);
+        }
+
 
     }
 
     public void addPass(String ref, PasswordEntry<AESEncryptionData> passwordEntry) {
+
+        if(!validate(passwordEntry)) throw new InvalidDataException();
 
         String sql = "INSERT INTO passwords (ref, description, payload, salt, iv, algo) VALUES (?,?,?,?,?,?)";
         AESEncryptionData aesEncryptionData = passwordEntry.getEncryptionData();
 
         try{
 
-            PreparedStatement preparedStatement = sqLiteConnection.prepareStatement(sql);
+            PreparedStatement preparedStatement = bindPreparedStatement(ref, passwordEntry, sql, aesEncryptionData);
 
-            preparedStatement.setString(1, ref);
-            preparedStatement.setString(2, passwordEntry.getDescription());
-            preparedStatement.setString(3, ByteUtils.toBase64(aesEncryptionData.getEncryptedPayload()));
-            preparedStatement.setString(4, ByteUtils.toBase64(aesEncryptionData.getSalt()));
-            preparedStatement.setString(5, ByteUtils.toBase64(aesEncryptionData.getInitilizationVector()));
-            preparedStatement.setString(6, "AESwPBKDF2");
-
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
 
         } catch (SQLException e) {
+
             LOG.info("SQL add exception", e);
+
         }
+
+    }
+
+    private PreparedStatement bindPreparedStatement(String ref, PasswordEntry<AESEncryptionData> passwordEntry, String sql, AESEncryptionData aesEncryptionData) throws SQLException {
+
+        PreparedStatement preparedStatement = con.prepareStatement(sql);
+
+        preparedStatement.setString(1, ref);
+        preparedStatement.setString(2, passwordEntry.getDescription());
+        preparedStatement.setString(3, ByteUtils.toBase64(aesEncryptionData.getEncryptedPayload()));
+        preparedStatement.setString(4, ByteUtils.toBase64(aesEncryptionData.getSalt()));
+        preparedStatement.setString(5, ByteUtils.toBase64(aesEncryptionData.getInitilizationVector()));
+        preparedStatement.setString(6, "AESwPBKDF2");
+
+        return preparedStatement;
 
     }
 
@@ -139,6 +204,24 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
     public void reset() {
 
         SQLitePrepare.resetTable();
+
+    }
+
+
+    private boolean validate(PasswordEntry<AESEncryptionData> passwordEntry){
+
+        if (passwordEntry == null) return false;
+
+        AESEncryptionData aesEncryptionData;
+
+        if (passwordEntry.getEncryptionData() == null) return false;
+        else aesEncryptionData = passwordEntry.getEncryptionData();
+
+        return passwordEntry.getRef() != null &&
+                aesEncryptionData.getInitilizationVector() != null &&
+                aesEncryptionData.getEncryptedPayload() != null &&
+                aesEncryptionData.getSalt() != null;
+
 
     }
 }

@@ -19,4 +19,8 @@ public class ByteUtils {
         return Base64.decodeBase64(base64.getBytes());
     }
 
+    public static byte[] dummyByte() {
+        return new byte[] { 0x1, 0x1, 0x1, 0x1 };
+    }
+
 }

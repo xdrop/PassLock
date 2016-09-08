@@ -1,5 +1,6 @@
 package com.xdrop.passlock.datasource;
 
+import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 import com.xdrop.passlock.model.EncryptionData;
 import com.xdrop.passlock.model.PasswordEntry;
@@ -11,9 +12,9 @@ public interface Datasource <T extends EncryptionData> {
 
     PasswordEntry<T> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) throws RefNotFoundException;
 
-    void delPass(String ref);
+    void delPass(String ref) throws RefNotFoundException;
 
-    void updatePass(String ref, PasswordEntry<T> newPasswordEntry);
+    void updatePass(String ref, PasswordEntry<AESEncryptionData> newPasswordEntry) throws RefNotFoundException;
 
     void addPass(String ref, PasswordEntry<T> passwordEntry);
 
