@@ -3,7 +3,7 @@ package com.xdrop.passlock.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.xdrop.passlock.core.PasswordManager;
-import com.xdrop.passlock.datasource.sqlite.SQLiteConnection;
+import com.xdrop.passlock.core.PasswordManagerAES;
 import com.xdrop.passlock.exceptions.CommandException;
 
 import java.io.Console;
@@ -18,7 +18,7 @@ public class AddCommand implements Command {
     private String description;
 
     @Parameter(names = {"--pass", "-p"})
-    private String newPassword;
+    private char[] newPassword;
 
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
@@ -37,15 +37,24 @@ public class AddCommand implements Command {
             throw new CommandException("Invalid number of arguments.");
         }
 
-        PasswordManager passwordManager = new PasswordManager();
+        String ref = name.get(0);
+
+        PasswordManager passwordManager = new PasswordManagerAES();
 
         pw.write("Please enter your master password:\n");
         pw.flush();
 
         char[] masterPassword = console.readPassword();
 
+        if(newPassword == null){
+            pw.write("Please enter the password you wish to store for " + ref + " :\n");
+            pw.flush();
+        }
+
+        char[] newPassword = console.readPassword();
+
         passwordManager.addPassword(description,
-                newPassword.toCharArray(),
+                newPassword,
                 masterPassword, name.get(0));
 
     }
