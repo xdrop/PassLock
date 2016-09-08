@@ -1,5 +1,6 @@
 package com.xdrop.passlock.crypto;
 
+import com.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

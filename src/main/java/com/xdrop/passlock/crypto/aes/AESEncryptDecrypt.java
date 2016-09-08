@@ -80,11 +80,14 @@ public class AESEncryptDecrypt {
         } catch (NoSuchAlgorithmException |
                 NoSuchPaddingException |
                 IllegalBlockSizeException |
-                InvalidAlgorithmParameterException |
-                BadPaddingException e) {
+                InvalidAlgorithmParameterException e) {
 
             LOG.info("Failure to decrypt", e);
             return null;
+
+        } catch (BadPaddingException e) {
+
+            throw new InvalidKeyException();
 
         }
 

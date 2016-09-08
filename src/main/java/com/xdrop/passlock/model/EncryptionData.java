@@ -4,9 +4,9 @@ import com.xdrop.passlock.utils.ByteUtils;
 
 public class EncryptionData {
 
-    private byte[] encryptedPayload = new byte[1];
+    private byte[] encryptedPayload;
 
-    private byte[] salt = new byte[1];
+    private byte[] salt;
 
 
     public EncryptionData(byte[] encryptedPayload, byte[] salt) {

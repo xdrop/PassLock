@@ -30,4 +30,12 @@ public class AESEncryptionModel implements EncryptionModel<AESEncryptionData> {
 
         return encryptionData;
     }
+
+    @Override
+    public SecretKey generateSecret(char[] password) {
+
+        byte[] salt = KeyDerivation.generateSalt();
+
+        return KeyDerivation.generateAESSecret(password, salt);
+    }
 }

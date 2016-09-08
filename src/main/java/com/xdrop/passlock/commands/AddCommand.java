@@ -9,6 +9,7 @@ import com.xdrop.passlock.exceptions.CommandException;
 import java.io.Console;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.security.InvalidKeyException;
 import java.util.List;
 
 @Parameters(commandDescription = "Adds a new password")
@@ -45,6 +46,18 @@ public class AddCommand implements Command {
         pw.flush();
 
         char[] masterPassword = console.readPassword();
+        char[] masterKey;
+
+        try {
+
+            masterKey = passwordManager.getMasterKey(masterPassword);
+
+        } catch (InvalidKeyException e) {
+
+            pw.write("Invalid master password. Exiting");
+            return;
+
+        }
 
         if(newPassword == null){
             pw.write("Please enter the password you wish to store for " + ref + " :\n");
@@ -53,9 +66,9 @@ public class AddCommand implements Command {
 
         char[] newPassword = console.readPassword();
 
-        passwordManager.addPassword(description,
-                newPassword,
-                masterPassword, name.get(0));
+//        passwordManager.addPassword(description,
+//                newPassword,
+//                masterKey, name.get(0));
 
     }
 }
