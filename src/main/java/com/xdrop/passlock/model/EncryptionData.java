@@ -1,6 +1,6 @@
 package com.xdrop.passlock.model;
 
-public abstract class EncryptionData {
+public class EncryptionData {
 
     private byte[] encryptedPayload;
 
