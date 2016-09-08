@@ -24,8 +24,6 @@ class AESEncryptDecryptTest extends GroovyTestCase {
         def encryptionData = instance.encrypt(encrypted.getBytes("UTF-8"), secretKey)
         def encString = ByteUtils.toBase64(encryptionData.encryptedPayload)
 
-        print(ByteUtils.toBase64(encryptionData.initilizationVector))
-
         assertNotNull encString
         assertNotNull encryptionData.initilizationVector
 

@@ -66,6 +66,10 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
         assertEquals result.encryptionData.salt, ByteUtils.fromBase64("salt==")
         assertEquals result.encryptionData.initilizationVector, ByteUtils.fromBase64("iv==")
 
+        shouldFail(RefNotFoundException){
+            datasource.getPass("www.nonexistent.com")
+        }
+
     }
 
     void testDelPass() {
@@ -89,6 +93,10 @@ class SQLiteAESDatasourceTest extends GroovyTestCase {
 
         assertNotNull pass
         assertEquals pass.description, "updated example"
+
+        shouldFail(RefNotFoundException){
+            datasource.updatePass("www.nonexistent.com", passwordEntry)
+        }
 
 
     }
