@@ -17,9 +17,6 @@ public class PasswordManager {
 
         EncryptionModel<AESEncryptionData> encryptionModel = new AESEncryptionModel();
 
-        // TODO: System.in
-        String pass = "pass";
-
         AESEncryptionData encryptionData = encryptionModel.encrypt(ByteUtils.getBytes(newPassword), pass.toCharArray());
 
         PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();

@@ -1,7 +1,6 @@
 package com.xdrop.passlock.crypto.aes;
 
 import com.xdrop.passlock.model.EncryptionData;
-import com.xdrop.passlock.utils.ByteUtils;
 
 public class AESEncryptionData extends EncryptionData {
 
@@ -15,7 +14,6 @@ public class AESEncryptionData extends EncryptionData {
 
     public AESEncryptionData() {
         super();
-        this.initilizationVector = ByteUtils.dummyByte();
     }
 
     public byte[] getInitilizationVector() {

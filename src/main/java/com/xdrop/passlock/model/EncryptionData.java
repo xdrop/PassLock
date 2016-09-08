@@ -15,8 +15,6 @@ public class EncryptionData {
     }
 
     public EncryptionData() {
-        this.encryptedPayload = ByteUtils.dummyByte();
-        this.encryptedPayload = ByteUtils.dummyByte();
     }
 
     public byte[] getEncryptedPayload() {

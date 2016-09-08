@@ -27,7 +27,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
         AESEncryptionData encryptionData = new AESEncryptionData();
 
-        try{
+        try {
 
             PreparedStatement statement = con.prepareStatement(sql);
 
@@ -36,9 +36,10 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
             ResultSet rs = statement.getResultSet();
 
-            if(rs.next()){
+            if (rs.next()) {
+
+                /* TODO: Add rest of fields eg. date */
                 passwordEntry.setId(rs.getString("id"));
-                // passwordEntry.setDate(rs.getInt("date"));
                 passwordEntry.setDescription(rs.getString("description"));
                 passwordEntry.setRef(rs.getString("ref"));
 
@@ -48,13 +49,16 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
                 passwordEntry.setEncryptionData(encryptionData);
 
-                assert(passwordEntry.getRef().equals(ref));
+                assert (passwordEntry.getRef().equals(ref));
                 statement.close();
 
                 return passwordEntry;
-            } else{
+
+            } else {
+
                 statement.close();
                 throw new RefNotFoundException();
+
             }
 
         } catch (SQLException e) {
@@ -70,7 +74,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         String sql = "SELECT ref FROM passwords";
 
-        try{
+        try {
 
             Statement statement = con.createStatement();
             statement.execute(sql);
@@ -80,7 +84,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
             List<String> candidates = new ArrayList<>();
 
-            while(rs.next()){
+            while (rs.next()) {
                 candidates.add(rs.getString("ref"));
             }
 
@@ -88,7 +92,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
             String ref = fuzzySearcher.search(fuzzyRef, candidates);
 
-            if(ref == null){
+            if (ref == null) {
                 throw new RefNotFoundException();
             }
 
@@ -96,7 +100,9 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+
+            LOG.info("Failed to list all entries", e);
+
         }
         return null;
     }
@@ -105,7 +111,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         String sql = "DELETE FROM passwords WHERE ref=?";
 
-        try{
+        try {
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
@@ -114,7 +120,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             int affectedRows = preparedStatement.executeUpdate();
             preparedStatement.close();
 
-            if(affectedRows < 1){
+            if (affectedRows < 1) {
                 throw new RefNotFoundException();
             }
 
@@ -128,13 +134,13 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     public void updatePass(String ref, PasswordEntry<AESEncryptionData> newPasswordEntry) throws RefNotFoundException {
 
-        if(!validate(newPasswordEntry)) throw new InvalidDataException();
+        if (!validate(newPasswordEntry)) throw new InvalidDataException();
 
         String sql = "UPDATE passwords SET ref=?, description=?, payload=?, salt=?, iv=?, algo=?" +
                 "WHERE ref=?";
         AESEncryptionData aesEncryptionData = newPasswordEntry.getEncryptionData();
 
-        try{
+        try {
 
             PreparedStatement preparedStatement = bindPreparedStatement(ref, newPasswordEntry, sql, aesEncryptionData);
 
@@ -143,13 +149,15 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             int affectedRows = preparedStatement.executeUpdate();
             preparedStatement.close();
 
-            if(affectedRows < 1){
+            if (affectedRows < 1) {
                 throw new RefNotFoundException();
             }
 
 
         } catch (SQLException e) {
+
             LOG.info("Failed to update", e);
+
         }
 
 
@@ -157,12 +165,12 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     public void addPass(String ref, PasswordEntry<AESEncryptionData> passwordEntry) {
 
-        if(!validate(passwordEntry)) throw new InvalidDataException();
+        if (!validate(passwordEntry)) throw new InvalidDataException();
 
         String sql = "INSERT INTO passwords (ref, description, payload, salt, iv, algo) VALUES (?,?,?,?,?,?)";
         AESEncryptionData aesEncryptionData = passwordEntry.getEncryptionData();
 
-        try{
+        try {
 
             PreparedStatement preparedStatement = bindPreparedStatement(ref, passwordEntry, sql, aesEncryptionData);
 
@@ -208,7 +216,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
     }
 
 
-    private boolean validate(PasswordEntry<AESEncryptionData> passwordEntry){
+    private boolean validate(PasswordEntry<AESEncryptionData> passwordEntry) {
 
         if (passwordEntry == null) return false;
 
@@ -221,7 +229,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
                 aesEncryptionData.getInitilizationVector() != null &&
                 aesEncryptionData.getEncryptedPayload() != null &&
                 aesEncryptionData.getSalt() != null;
-
 
     }
 }
