@@ -38,13 +38,8 @@ public class AESEncryptDecrypt {
             AlgorithmParameters params = cipher.getParameters();
             byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 
-            System.out.println(ByteUtils.toBase64(iv));
-            System.out.println(Arrays.toString(iv));
-
             byte[] output = cipher.doFinal(payload);
 
-            System.out.println(ByteUtils.toBase64(output));
-            System.out.println(Arrays.toString(output));
             AESEncryptionData aesEncryptionData = new AESEncryptionData();
             aesEncryptionData.setInitilizationVector(iv);
             aesEncryptionData.setEncryptedPayload(output);
