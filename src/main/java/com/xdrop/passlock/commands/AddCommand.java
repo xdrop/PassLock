@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.core.PasswordManagerAES;
+import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource;
 import com.xdrop.passlock.exceptions.CommandException;
 
 import java.io.Console;
@@ -40,7 +41,7 @@ public class AddCommand implements Command {
 
         String ref = name.get(0);
 
-        PasswordManager passwordManager = new PasswordManagerAES();
+        PasswordManager passwordManager = new PasswordManagerAES(new SQLiteAESDatasource());
 
         pw.write("Please enter your master password:\n");
         pw.flush();

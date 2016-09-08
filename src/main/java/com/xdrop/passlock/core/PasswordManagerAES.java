@@ -39,8 +39,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      *
      * @param description Description of what this password is for
      * @param newPassword The password to store in a *char* array
-     * @param masterPass The master password
-     * @param reference A unique reference identifier for this entry
+     * @param masterPass  The master password
+     * @param reference   A unique reference identifier for this entry
      */
     @Override
     public void addPassword(String description, char[] newPassword, char[] masterPass, String reference) {
@@ -54,8 +54,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      *
      * @param description Description of what this password is for
      * @param newPassword The password to store in *bytes*
-     * @param masterPass The master password
-     * @param reference A unique reference identifier for this entry
+     * @param masterPass  The master password
+     * @param reference   A unique reference identifier for this entry
      */
     @Override
     public void addPassword(String description, byte[] newPassword, char[] masterPass, String reference) {
@@ -80,25 +80,25 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * key which is retrieved from the datastore using the
      * master password.
      *
-     * @param reference A unique reference identifier for this entry
+     * @param reference   A unique reference identifier for this entry
      * @param searchFuzzy Determines whether the datasource should be searched
      *                    fuzzily, ie. will try and determine the closest
      *                    non exact match
      *                    (eg. "goolge" might resolve to www.google.com)
-     * @param password The password with which this should be decrypted
+     * @param password    The password with which this should be decrypted
      * @return The decrypted password in byte[] UTF-8 format
      * @throws RefNotFoundException Thrown if the reference used
      *                              could not be found in the
      *                              database.
-     * @throws InvalidKeyException Thrown if the password supplied
-     *                             is incorrect and cannot
-     *                             unlock the password.
+     * @throws InvalidKeyException  Thrown if the password supplied
+     *                              is incorrect and cannot
+     *                              unlock the password.
      */
     @Override
     public byte[] getPassword(String reference, boolean searchFuzzy, char[] password)
             throws RefNotFoundException, InvalidKeyException {
 
-        LOG.debug("Looking for " + reference +"...");
+        LOG.debug("Looking for " + reference + "...");
 
         if (!searchFuzzy) {
 
@@ -146,7 +146,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * @param password The master password used to encrypt the master
      *                 key.
      * @return True  - if password is correct
-     *         False - otherwise
+     * False - otherwise
      */
     @Override
     public boolean unlocksMaster(char[] password) {
