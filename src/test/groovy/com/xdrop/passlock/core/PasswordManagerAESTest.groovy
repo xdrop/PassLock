@@ -1,9 +1,6 @@
 package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
-import com.xdrop.passlock.PassLock
-import com.xdrop.passlock.utils.ByteUtils
-import org.apache.log4j.PropertyConfigurator
 
 import java.security.InvalidKeyException
 
