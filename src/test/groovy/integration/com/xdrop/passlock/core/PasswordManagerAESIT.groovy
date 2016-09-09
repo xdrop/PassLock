@@ -1,3 +1,4 @@
+package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.core.PasswordManagerAES

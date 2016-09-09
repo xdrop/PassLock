@@ -93,7 +93,7 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def wrong = "wrongpass".toCharArray()
 
 
-        def passman = partialMockBuilder(PasswordManagerAES.class)
+        def passman = partialMockBuilder(PasswordManagerAES)
                 .addMockedMethod("getPassword")
                 .createMock();
 
@@ -116,7 +116,7 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
 
     void testGetMasterKey() {
 
-        def passman = partialMockBuilder(PasswordManagerAES.class)
+        def passman = partialMockBuilder(PasswordManagerAES)
                 .addMockedMethod("getPassword")
                 .createMock();
 
