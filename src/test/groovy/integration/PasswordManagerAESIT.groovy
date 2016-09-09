@@ -1,12 +1,13 @@
-package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
+import com.xdrop.passlock.core.PasswordManagerAES
+import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource
 
 import java.security.InvalidKeyException
 
-class PasswordManagerAESTest extends LogGroovyTestCase {
+class PasswordManagerAESIT extends LogGroovyTestCase {
 
-    def pwman = new PasswordManagerAES();
+    def pwman = new PasswordManagerAES(new SQLiteAESDatasource());
     def masterPass = "mymaster";
     def encryptionPayload = "encryptme"
 

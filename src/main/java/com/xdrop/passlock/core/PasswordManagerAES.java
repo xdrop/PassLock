@@ -195,5 +195,12 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
     }
 
+    public void setDatasource(Datasource<AESEncryptionData> datasource) {
+        this.datasource = datasource;
+    }
 
+
+    public void setEncryptionModel(EncryptionModel<AESEncryptionData> encryptionModel) {
+        this.encryptionModel = encryptionModel;
+    }
 }
