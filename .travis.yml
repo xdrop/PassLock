@@ -4,4 +4,4 @@ sudo: false
 jdk:
   - openjdk7
 
-script: mvn clean install
+script: mvn clean compile integration-test
