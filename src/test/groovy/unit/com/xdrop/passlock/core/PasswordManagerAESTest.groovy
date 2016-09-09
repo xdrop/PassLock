@@ -60,14 +60,14 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         pwman.setEncryptionModel(encModel)
 
 
-        def gotten = pwman.getPassword("test", false, nonMasterPass)
+        def gotten = pwman.getPassword("test", nonMasterPass)
 
         assertNotNull gotten
 
         assert gotten == encryptionPayload.getBytes("UTF-8")
 
         shouldFail(InvalidKeyException) {
-            pwman.getPassword("test", false, wrongPass)
+            pwman.getPassword("test", wrongPass)
         }
 
     }
@@ -98,11 +98,11 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
                 .createMock();
 
 
-        expect(passman.getPassword("master", false, mypass))
+        expect(passman.getPassword("master", mypass))
             .andReturn(new byte[12])
             .anyTimes()
 
-        expect(passman.getPassword("master", false, wrong))
+        expect(passman.getPassword("master", wrong))
             .andThrow(new InvalidKeyException())
             .anyTimes()
 
@@ -123,7 +123,7 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def mypass = "mypassword".toCharArray()
         def storedKey = "masterpass".getBytes("UTF-8")
 
-        expect(passman.getPassword("master", false, mypass))
+        expect(passman.getPassword("master", mypass))
                 .andReturn(storedKey)
 
         replay(passman)

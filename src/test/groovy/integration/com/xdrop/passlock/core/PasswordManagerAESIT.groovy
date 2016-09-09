@@ -1,7 +1,6 @@
 package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
-import com.xdrop.passlock.core.PasswordManagerAES
 import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource
 
 import java.security.InvalidKeyException
@@ -25,26 +24,26 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
         pwman.addPassword("Description", "testpayload".toCharArray(), "nonaesmaster".toCharArray(), "test")
 
-        assertNotNull pwman.getPassword("test", false, "nonaesmaster".toCharArray())
+        assertNotNull pwman.getPassword("test", "nonaesmaster".toCharArray())
 
     }
 
     void testGetPassword() {
 
-        def gotten = pwman.getPassword("def", false, "nonaesmaster".toCharArray())
+        def gotten = pwman.getPassword("def", "nonaesmaster".toCharArray())
 
         assertNotNull gotten
         assert gotten == encryptionPayload.getBytes("UTF-8")
 
         shouldFail(InvalidKeyException){
-            pwman.getPassword("def", false, "wrongpassword23132@@\$£:\$%@\$^%:^@\$%&\$&:\$%^\$%\\^".toCharArray())
+            pwman.getPassword("def", "wrongpassword23132@@\$£:\$%@\$^%:^@\$%&\$&:\$%^\$%\\^".toCharArray())
         }
 
     }
 
     void testInitializeDatasource() {
 
-        def master = pwman.getPassword("master", false, "mymaster".getChars())
+        def master = pwman.getPassword("master", "mymaster".getChars())
 
         assertNotNull master
 
@@ -64,7 +63,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         pwman.addPassword("New pass", "hideme".getChars(), masterKey, "newpass")
 
         assertNotNull masterKey
-        assert pwman.getPassword("newpass", false, masterKey) == "hideme".getBytes("UTF-8")
+        assert pwman.getPassword("newpass", masterKey) == "hideme".getBytes("UTF-8")
 
     }
 }

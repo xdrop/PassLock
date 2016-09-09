@@ -41,20 +41,6 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
     }
 
     @Test
-    void testGetPassFuzzy() {
-
-        def fuzzySearcher = EasyMock.createMock(FuzzySearcher.class);
-
-        EasyMock.expect(fuzzySearcher.search(EasyMock.eq("google"), EasyMock.anyObject(List.class))).andReturn("www.google.com");
-        EasyMock.replay(fuzzySearcher);
-
-        def passentry = datasource.getPass("google", fuzzySearcher)
-
-        assertNotNull passentry
-
-    }
-
-    @Test
     void testGetPassExact() {
 
         def result = datasource.getPass("www.google.com")

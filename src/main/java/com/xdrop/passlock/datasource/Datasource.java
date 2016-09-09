@@ -10,8 +10,6 @@ public interface Datasource <T extends EncryptionData> {
 
     PasswordEntry<T> getPass(String ref) throws RefNotFoundException;
 
-    PasswordEntry<T> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher) throws RefNotFoundException;
-
     void delPass(String ref) throws RefNotFoundException;
 
     void updatePass(String ref, PasswordEntry<AESEncryptionData> newPasswordEntry) throws RefNotFoundException;

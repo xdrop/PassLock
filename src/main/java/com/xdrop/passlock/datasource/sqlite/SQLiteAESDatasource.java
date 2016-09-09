@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
@@ -67,44 +68,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         return null;
 
-    }
-
-    public PasswordEntry<AESEncryptionData> getPass(String fuzzyRef, FuzzySearcher fuzzySearcher)
-            throws RefNotFoundException {
-
-        String sql = "SELECT ref FROM passwords";
-
-        try {
-
-            Statement statement = con.createStatement();
-            statement.execute(sql);
-
-            ResultSet rs = statement.getResultSet();
-
-
-            List<String> candidates = new ArrayList<>();
-
-            while (rs.next()) {
-                candidates.add(rs.getString("ref"));
-            }
-
-            statement.close();
-
-            String ref = fuzzySearcher.search(fuzzyRef, candidates);
-
-            if (ref == null) {
-                throw new RefNotFoundException();
-            }
-
-            return getPass(ref);
-
-
-        } catch (SQLException e) {
-
-            LOG.info("Failed to list all entries", e);
-
-        }
-        return null;
     }
 
     public void delPass(String ref) throws RefNotFoundException {

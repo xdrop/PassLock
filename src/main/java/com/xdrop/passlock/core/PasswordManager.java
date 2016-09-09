@@ -32,10 +32,6 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      * Retrieves and decrypts the password requested, using a decryption algorithm
      *
      * @param reference A unique reference identifier for this entry
-     * @param searchFuzzy Determines whether the datasource should be searched
-     *                    fuzzily, ie. will try and determine the closest
-     *                    non exact match
-     *                    (eg. "goolge" might resolve to www.google.com)
      * @param password The password with which this should be decrypted
      * @return The decrypted password in byte[] UTF-8 format
      * @throws RefNotFoundException Thrown if the reference used
@@ -45,7 +41,7 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      *                             is incorrect and cannot
      *                             unlock the password.
      */
-    byte[] getPassword(String reference, boolean searchFuzzy, char[] password)
+    byte[] getPassword(String reference, char[] password)
             throws RefNotFoundException, InvalidKeyException;
 
     /**

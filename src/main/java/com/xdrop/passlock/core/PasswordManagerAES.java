@@ -7,7 +7,6 @@ import com.xdrop.passlock.crypto.EncryptionModel;
 import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.crypto.aes.AESEncryptionModel;
 import com.xdrop.passlock.datasource.Datasource;
-import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource;
 import com.xdrop.passlock.model.PasswordEntry;
 import com.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
@@ -80,12 +79,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * key which is retrieved from the datastore using the
      * master password.
      *
-     * @param reference   A unique reference identifier for this entry
-     * @param searchFuzzy Determines whether the datasource should be searched
-     *                    fuzzily, ie. will try and determine the closest
-     *                    non exact match
-     *                    (eg. "goolge" might resolve to www.google.com)
-     * @param password    The password with which this should be decrypted
+     * @param reference A unique reference identifier for this entry
+     * @param password  The password with which this should be decrypted
      * @return The decrypted password in byte[] UTF-8 format
      * @throws RefNotFoundException Thrown if the reference used
      *                              could not be found in the
@@ -95,22 +90,15 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      *                              unlock the password.
      */
     @Override
-    public byte[] getPassword(String reference, boolean searchFuzzy, char[] password)
+    public byte[] getPassword(String reference, char[] password)
             throws RefNotFoundException, InvalidKeyException {
 
         LOG.debug("Looking for " + reference + "...");
+        PasswordEntry<AESEncryptionData> pass = datasource.getPass(reference);
 
-        if (!searchFuzzy) {
+        LOG.debug("Decrypting with key...");
+        return encryptionModel.decrypt(pass.getEncryptionData(), password);
 
-            PasswordEntry<AESEncryptionData> pass = datasource.getPass(reference);
-
-            LOG.debug("Decrypting with key...");
-
-            return encryptionModel.decrypt(pass.getEncryptionData(), password);
-
-        }
-
-        return new byte[0];
     }
 
     /**
@@ -153,7 +141,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         try {
 
-            getPassword("master", false, password);
+            getPassword("master", password);
             return true;
 
         } catch (RefNotFoundException e) {
@@ -184,7 +172,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
             LOG.debug("Retrieving master key...");
 
-            return ByteUtils.getChars(getPassword("master", false, password));
+            return ByteUtils.getChars(getPassword("master", password));
 
         } catch (RefNotFoundException e) {
 
