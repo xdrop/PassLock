@@ -1,5 +1,7 @@
 package com.xdrop.passlock.core;
 
+import com.xdrop.passlock.exceptions.AlreadyExistsException;
+import com.xdrop.passlock.exceptions.NotInitalizedException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 
 
@@ -8,14 +10,16 @@ import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.crypto.aes.AESEncryptionModel;
 import com.xdrop.passlock.datasource.Datasource;
 import com.xdrop.passlock.model.PasswordEntry;
+import com.xdrop.passlock.search.FuzzySearcher;
 import com.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
+import java.util.List;
 
-public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, AESEncryptionData> {
+public class PasswordManagerAES implements PasswordManager<AESEncryptionModel,AESEncryptionData> {
 
     private final static Logger LOG = LoggerFactory.getLogger(PasswordManagerAES.class);
 
@@ -42,7 +46,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * @param reference   A unique reference identifier for this entry
      */
     @Override
-    public void addPassword(String description, char[] newPassword, char[] masterPass, String reference) {
+    public void addPassword(String description, char[] newPassword, char[] masterPass, String reference)
+            throws AlreadyExistsException {
         addPassword(description, ByteUtils.getBytes(newPassword), masterPass, reference);
     }
 
@@ -57,7 +62,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * @param reference   A unique reference identifier for this entry
      */
     @Override
-    public void addPassword(String description, byte[] newPassword, char[] masterPass, String reference) {
+    public void addPassword(String description, byte[] newPassword, char[] masterPass, String reference)
+            throws AlreadyExistsException {
 
         LOG.debug("Encrypting entry [" + reference + "]...");
 
@@ -80,7 +86,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      * master password.
      *
      * @param reference A unique reference identifier for this entry
-     * @param password  The password with which this should be decrypted
+     * @param masterKey  The password with which this should be decrypted
      * @return The decrypted password in byte[] UTF-8 format
      * @throws RefNotFoundException Thrown if the reference used
      *                              could not be found in the
@@ -90,16 +96,17 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      *                              unlock the password.
      */
     @Override
-    public byte[] getPassword(String reference, char[] password)
+    public byte[] getPassword(String reference, char[] masterKey)
             throws RefNotFoundException, InvalidKeyException {
 
         LOG.debug("Looking for " + reference + "...");
         PasswordEntry<AESEncryptionData> pass = datasource.getPass(reference);
 
         LOG.debug("Decrypting with key...");
-        return encryptionModel.decrypt(pass.getEncryptionData(), password);
+        return encryptionModel.decrypt(pass.getEncryptionData(), masterKey);
 
     }
+
 
     /**
      * Initializes and *resets* the database. All data in it will be lost!
@@ -121,10 +128,26 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
         /* Store the master key */
         SecretKey secretKey = encryptionModel.generateSecret(masterPass);
 
-        addPassword("The master key", secretKey.getEncoded(), masterPass, "master");
+        try {
+            addPassword("The master key", secretKey.getEncoded(), masterPass, "master");
+        } catch (AlreadyExistsException ignored) { /* can't happen */ }
 
         LOG.info("AES secret succesfully stored!");
 
+    }
+
+    @Override
+    public boolean isInitialized() {
+
+        try{
+
+            datasource.getPass("master");
+
+        } catch (RefNotFoundException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -176,11 +199,32 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         } catch (RefNotFoundException e) {
 
-            LOG.error("Master key not found", e);
+            LOG.debug("Master key not found", e);
             return null;
 
         }
 
+    }
+
+    /**
+     * Searches the datasource to find a password entry matching
+     * {@code ref}, and returns the list of the closest
+     * matches.
+     *
+     * @param searcher The searching class to be used
+     * @param query    The query string to search for
+     * @param limit    The number of entries to return
+     * @return The matched password references
+     * @throws RefNotFoundException Thrown if the query failed to match any
+     *                              entries with the specified cutoff level
+     */
+    @Override
+    public List<String> search(FuzzySearcher searcher, String query, int limit) throws RefNotFoundException {
+
+        List<String> passList = datasource.getPassList();
+        passList.remove("master");
+
+        return searcher.search(query, passList, limit);
     }
 
     public void setDatasource(Datasource<AESEncryptionData> datasource) {

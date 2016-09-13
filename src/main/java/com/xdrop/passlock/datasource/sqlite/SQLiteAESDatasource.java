@@ -2,6 +2,7 @@ package com.xdrop.passlock.datasource.sqlite;
 
 import com.xdrop.passlock.crypto.aes.AESEncryptionData;
 import com.xdrop.passlock.datasource.Datasource;
+import com.xdrop.passlock.exceptions.AlreadyExistsException;
 import com.xdrop.passlock.exceptions.InvalidDataException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 import com.xdrop.passlock.model.PasswordEntry;
@@ -70,6 +71,40 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     }
 
+    @Override
+    public List<String> getPassList() {
+
+        String sql = "SELECT ref FROM passwords";
+        List<String> results = new ArrayList<>();
+
+        try {
+
+            PreparedStatement statement = con.prepareStatement(sql);
+
+            statement.execute();
+
+            ResultSet rs = statement.getResultSet();
+
+            while (rs.next()) {
+
+                String ref = rs.getString("ref");
+                results.add(ref);
+
+            }
+
+            LOG.debug("SQL retrieved " + results.size() + " results");
+
+            statement.close();
+
+            return results;
+
+        } catch (SQLException e) {
+            LOG.debug("SQL failed to retrieve list", e);
+        }
+
+        return null;
+    }
+
     public void delPass(String ref) throws RefNotFoundException {
 
         String sql = "DELETE FROM passwords WHERE ref=?";
@@ -126,7 +161,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     }
 
-    public void addPass(String ref, PasswordEntry<AESEncryptionData> passwordEntry) {
+    public void addPass(String ref, PasswordEntry<AESEncryptionData> passwordEntry) throws AlreadyExistsException {
 
         if (!validate(passwordEntry)) throw new InvalidDataException();
 
@@ -142,7 +177,14 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         } catch (SQLException e) {
 
+            if (e.getErrorCode() == 19) {
+
+                throw new AlreadyExistsException();
+
+            }
+
             LOG.info("SQL add exception", e);
+
 
         }
 

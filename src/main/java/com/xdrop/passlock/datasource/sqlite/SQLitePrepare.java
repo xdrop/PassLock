@@ -20,7 +20,7 @@ public class SQLitePrepare {
 
         String sql =
                 "CREATE TABLE IF NOT EXISTS passwords (id integer PRIMARY KEY ,\n" +
-                "ref TEXT NOT NULL, description TEXT, payload TEXT NOT NULL, salt TEXT NOT NULL,\n" +
+                "ref TEXT UNIQUE NOT NULL, description TEXT, payload TEXT NOT NULL, salt TEXT NOT NULL,\n" +
                 "algo TEXT, iv TEXT NOT NULL, date_created INTEGER, last_updated INTEGER)";
 
         performSingleTransaction(sqLiteConnection, sql);
