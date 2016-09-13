@@ -5,16 +5,24 @@ import com.beust.jcommander.Parameters;
 import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.core.PasswordManagerAES;
 import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource;
+import com.xdrop.passlock.exceptions.AlreadyExistsException;
 import com.xdrop.passlock.exceptions.CommandException;
+import com.xdrop.passlock.io.TextInputOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Console;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Parameters(commandDescription = "Adds a new password")
 public class AddCommand implements Command {
+
+    private final static Logger LOG = LoggerFactory.getLogger(AddCommand.class);
 
     @Parameter(names = {"--description", "--desc", "-d"})
     private String description;
@@ -25,17 +33,18 @@ public class AddCommand implements Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
-    private Console console;
-    private PrintWriter pw;
+    private TextInputOutput tio;
 
-    public AddCommand(OutputStream out) {
-        this.console = System.console();
-        this.pw = new PrintWriter(out);
+
+    public AddCommand() {
+
+        this.tio = new TextInputOutput();
+
     }
 
     public void execute() throws CommandException {
 
-        if(name.size() != 1 || name == null){
+        if(name == null || name.size() != 1){
             throw new CommandException("Invalid number of arguments.");
         }
 
@@ -43,33 +52,50 @@ public class AddCommand implements Command {
 
         PasswordManager passwordManager = new PasswordManagerAES(new SQLiteAESDatasource());
 
-        pw.write("Please enter your master password:\n");
-        pw.flush();
+        tio.write("Please enter your master password:");
 
-        char[] masterPassword = console.readPassword();
+        char[] masterPassword = tio.getSecure();
         char[] masterKey;
 
         try {
 
             masterKey = passwordManager.getMasterKey(masterPassword);
 
+            if(newPassword == null){
+                tio.write("Please enter the password you wish to store for " + ref + ": ");
+            }
+
+            char[] newPassword = tio.getSecure();
+
+
+            passwordManager.addPassword(description,
+                    newPassword,
+                    masterKey, name.get(0));
+
+            tio.writeln("Successfully stored password [" + ref + "]");
+
         } catch (InvalidKeyException e) {
 
-            pw.write("Invalid master password. Exiting");
-            return;
+            throw new CommandException("Invalid master password.");
+
+        } catch (AlreadyExistsException e) {
+
+            throw new CommandException("The reference you have selected is not unique.");
 
         }
 
-        if(newPassword == null){
-            pw.write("Please enter the password you wish to store for " + ref + " :\n");
-            pw.flush();
-        }
 
-        char[] newPassword = console.readPassword();
+    }
 
-//        passwordManager.addPassword(description,
-//                newPassword,
-//                masterKey, name.get(0));
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public void setNewPassword(char[] newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public void setName(List<String> name) {
+        this.name = name;
     }
 }
