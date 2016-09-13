@@ -178,6 +178,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.xdrop</groupId>
             <artifactId>fuzzywuzzy</artifactId>
