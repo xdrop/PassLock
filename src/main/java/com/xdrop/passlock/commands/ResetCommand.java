@@ -10,20 +10,16 @@ import com.xdrop.passlock.io.TextInputOutput;
 import java.util.Arrays;
 
 @Parameters(commandDescription = "Resets the datasource")
-public class ResetCommand implements Command {
+public class ResetCommand extends Command {
 
-    private TextInputOutput tio;
-
-    public ResetCommand() {
-        this.tio = new TextInputOutput();
+    public ResetCommand(PasswordManager passwordManager) {
+        super(passwordManager);
     }
 
     @Override
     public void execute() throws CommandException {
 
-        PasswordManager passwordManager = new PasswordManagerAES(new SQLiteAESDatasource());
-
-        char[] secret = null;
+        char[] secret;
 
         while(true) {
 

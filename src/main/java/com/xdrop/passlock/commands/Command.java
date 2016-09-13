@@ -1,9 +1,20 @@
 package com.xdrop.passlock.commands;
 
+
+import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.exceptions.CommandException;
+import com.xdrop.passlock.io.TextInputOutput;
 
-public interface Command {
+public abstract class Command {
 
-    void execute() throws CommandException;
+    protected TextInputOutput tio;
+    protected PasswordManager passwordManager;
+
+    public Command(PasswordManager passwordManager) {
+        this.passwordManager = passwordManager;
+        this.tio = new TextInputOutput();
+    }
+
+    public abstract void execute() throws CommandException;
 
 }

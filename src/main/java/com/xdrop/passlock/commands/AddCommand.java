@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Parameters(commandDescription = "Adds a new password")
-public class AddCommand implements Command {
+public class AddCommand extends Command {
 
     private final static Logger LOG = LoggerFactory.getLogger(AddCommand.class);
 
@@ -33,13 +33,8 @@ public class AddCommand implements Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
-    private TextInputOutput tio;
-
-
-    public AddCommand() {
-
-        this.tio = new TextInputOutput();
-
+    public AddCommand(PasswordManager passwordManager) {
+        super(passwordManager);
     }
 
     public void execute() throws CommandException {
@@ -50,9 +45,8 @@ public class AddCommand implements Command {
 
         String ref = name.get(0);
 
-        PasswordManager passwordManager = new PasswordManagerAES(new SQLiteAESDatasource());
 
-        tio.write("Please enter your master password:");
+        tio.write("Please enter your master password: ");
 
         char[] masterPassword = tio.getSecure();
         char[] masterKey;

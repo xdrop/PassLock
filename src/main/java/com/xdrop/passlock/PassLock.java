@@ -53,7 +53,7 @@ public class PassLock {
         if(!passwordManager.isInitialized()){
             try {
                 tio.writeln("This is your first time running, initializing database");
-                new ResetCommand().execute();
+                new ResetCommand(passwordManager).execute();
             } catch (CommandException ignored) {}
         }
 
@@ -62,23 +62,27 @@ public class PassLock {
 
         Map<String, Command> commands = new HashMap<>();
 
-        AddCommand addCommand = new AddCommand();
+        AddCommand addCommand = new AddCommand(passwordManager);
         jc.addCommand("add", addCommand);
+        jc.addCommand("a", addCommand);
         commands.put("add", addCommand);
 
-        DeleteCommand deleteCommand = new DeleteCommand();
+        DeleteCommand deleteCommand = new DeleteCommand(passwordManager);
         jc.addCommand("delete", deleteCommand);
+        jc.addCommand("d", deleteCommand);
         commands.put("delete", deleteCommand);
 
-        UpdateCommand updateCommand = new UpdateCommand();
+        UpdateCommand updateCommand = new UpdateCommand(passwordManager);
         jc.addCommand("update", updateCommand);
+        jc.addCommand("u", updateCommand);
         commands.put("update", updateCommand);
 
-        GetCommand getCommand = new GetCommand();
+        GetCommand getCommand = new GetCommand(passwordManager);
         jc.addCommand("get", getCommand);
+        jc.addCommand("g", getCommand);
         commands.put("get", getCommand);
 
-        ResetCommand resetCommand = new ResetCommand();
+        ResetCommand resetCommand = new ResetCommand(passwordManager);
         jc.addCommand("reset", resetCommand);
         commands.put("reset", resetCommand);
 

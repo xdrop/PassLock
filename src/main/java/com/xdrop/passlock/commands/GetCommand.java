@@ -23,17 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 @Parameters(commandDescription = "Gets the password of this entry")
-public class GetCommand implements Command {
+public class GetCommand extends Command {
 
     private final static Logger LOG = LoggerFactory.getLogger(GetCommand.class);
 
     @Parameter(description = "Reference to the entry")
     private List<String> ref;
 
-    private TextInputOutput tio;
-
-    public GetCommand() {
-        this.tio = new TextInputOutput();
+    public GetCommand(PasswordManager passwordManager) {
+        super(passwordManager);
     }
 
     public void execute() throws CommandException {
@@ -43,11 +41,6 @@ public class GetCommand implements Command {
         }
 
         String ref = this.ref.get(0);
-
-        // TODO: Refactor this out
-        PasswordManager<AESEncryptionModel,AESEncryptionData> passwordManager =
-                new PasswordManagerAES(new SQLiteAESDatasource());
-
 
         try {
 
@@ -71,7 +64,7 @@ public class GetCommand implements Command {
 
                     for (int i = 1; i <= searchResults.size(); i++) {
 
-                        String next = searchResults.get(i);
+                        String next = searchResults.get(i - 1);
 
                         choices.put(String.valueOf(i), next);
                         tio.writeln("[" + i + "] " + next);
@@ -81,7 +74,12 @@ public class GetCommand implements Command {
                     tio.writeln("\nEnter choice:");
                     choice = choices.get(tio.getLine());
 
-                    if(choice != null) selectionMade = true;
+                    if(choice != null) {
+                        selectionMade = true;
+                    } else {
+                        tio.writeln("Invalid choice.");
+                        tio.writeln("");
+                    }
 
                 }
 
@@ -90,7 +88,7 @@ public class GetCommand implements Command {
             } else {
                 ref = searchResults.get(0);
             }
-
+            tio.writeln("Showing password for [" + ref + "]");
             tio.writeln("Enter your master pass");
 
             char[] master = tio.getSecure();

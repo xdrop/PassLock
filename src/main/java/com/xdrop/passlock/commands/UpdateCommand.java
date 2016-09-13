@@ -2,10 +2,15 @@ package com.xdrop.passlock.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.exceptions.CommandException;
 
 @Parameters(commandDescription = "Updates a password")
-public class UpdateCommand implements Command {
+public class UpdateCommand extends Command {
+
+    public UpdateCommand(PasswordManager passwordManager) {
+        super(passwordManager);
+    }
 
     @Parameter(names = {"--description", "--desc", "-d"})
     private String description;
