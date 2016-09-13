@@ -51,20 +51,6 @@
                             </excludes>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>tdd-test</id>
-                        <goals>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <exclude>**/**TDD**</exclude>
-                            </includes>
-                            <excludes>
-                                <include>**/**Test**</include>
-                                <inclide>**/**IT**</inclide>
-                            </excludes>
-                        </configuration>
-                    </execution>
                 </executions>
                 <configuration>
                     <excludes>
@@ -199,6 +185,26 @@
             <version>1.9</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava-collections -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-collections</artifactId>
+            <version>r03</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xdrop</groupId>
+            <artifactId>fuzzywuzzy</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
@@ -208,6 +214,30 @@
         </dependency>
 
     </dependencies>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-xdrop-FuzzyWuzzy-Java</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/xdrop/FuzzyWuzzy-Java</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-xdrop-FuzzyWuzzy-Java</id>
+            <name>bintray-plugins</name>
+            <url>http://dl.bintray.com/xdrop/FuzzyWuzzy-Java</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+
 
 
 </project>

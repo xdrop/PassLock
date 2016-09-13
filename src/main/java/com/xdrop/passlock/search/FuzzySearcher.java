@@ -9,6 +9,6 @@ public interface FuzzySearcher {
 
     List<FuzzySearchResult> search(String ref, List<String> options);
 
-    Optional<FuzzySearchResult> searchTop(String ref, List<String> options);
+    Optional<String> searchTop(String ref, List<String> options);
 
 }

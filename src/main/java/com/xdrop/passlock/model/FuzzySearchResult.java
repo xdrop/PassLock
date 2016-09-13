@@ -4,19 +4,23 @@ public class FuzzySearchResult implements Comparable<FuzzySearchResult>{
 
     private String reference;
 
-    private double weight;
+    private int weight;
 
+    public FuzzySearchResult(String reference, int weight) {
+        this.reference = reference;
+        this.weight = weight;
+    }
 
     @Override
     public int compareTo(FuzzySearchResult o) {
-        return Double.compare(getWeight(), o.getWeight());
+        return Double.compare(o.getWeight(),getWeight());
     }
 
     public String getReference() {
         return reference;
     }
 
-    public double getWeight() {
+    public int getWeight() {
         return weight;
     }
 }
