@@ -2,6 +2,7 @@ package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource
+import com.xdrop.passlock.search.DefaultSearch
 
 import java.security.InvalidKeyException
 
@@ -17,6 +18,15 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         pwman.initializeDatasource(masterPass.toCharArray())
 
         pwman.addPassword("Description", encryptionPayload.getBytes("UTF-8"), "nonaesmaster".toCharArray(), "def")
+
+    }
+
+    void testSearch() {
+
+        pwman.addPassword("Description", encryptionPayload.getBytes("UTF-8"), "nonaesmaster".toCharArray(),
+                "www.google.com")
+
+        assertEquals "www.google.com", pwman.search(new DefaultSearch(), "google", 5).get(0)
 
     }
 
@@ -36,6 +46,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         assert gotten == encryptionPayload.getBytes("UTF-8")
 
         shouldFail(InvalidKeyException){
+            pwman.getPassword("def", "asda".toCharArray())
             pwman.getPassword("def", "wrongpassword23132@@\$£:\$%@\$^%:^@\$%&\$&:\$%^\$%\\^".toCharArray())
         }
 

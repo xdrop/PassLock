@@ -2,9 +2,9 @@ package com.xdrop.passlock.search
 
 import com.xdrop.passlock.LogGroovyTestCase
 
-class FuzzyWuzzySearchTDD extends LogGroovyTestCase {
+class DefaultSearchTDD extends LogGroovyTestCase {
 
-    def search = new FuzzyWuzzySearch()
+    def search = new DefaultSearch(94, 10)
     List options;
 
     void setUp() {
@@ -20,14 +20,14 @@ class FuzzyWuzzySearchTDD extends LogGroovyTestCase {
 
     void testSearch() {
 
-        assertEquals "www.bing.com", search.search("bng",options).get(0).getReference()
-        assertEquals "www.google.com", search.search("google", options).get(0).getReference()
-        assertEquals "www.github.com", search.search("git hub",options).get(0).getReference()
-        assertEquals "gmail.com", search.search("email",options).get(0).getReference()
-        assertEquals "www.github.com", search.search("git hub",options).get(0).getReference()
-        assertEquals "www.github.com", search.search("git hub",options).get(0).getReference()
-        assertEquals "laptoppass", search.search("lptp", options).get(0).getReference()
-        assertEquals "www.mavencentral.com", search.search("mvn", options).get(0).getReference()
+        assertEquals "www.bing.com", search.search("bng",options).get(0)
+        assertEquals "www.google.com", search.search("google", options).get(0)
+        assertEquals "www.github.com", search.search("git hub",options).get(0)
+        assertEquals "gmail.com", search.search("email",options).get(0)
+        assertEquals "www.github.com", search.search("git hub",options).get(0)
+        assertEquals "www.github.com", search.search("git hub",options).get(0)
+        assertEquals "laptoppass", search.search("lptp", options).get(0)
+        assertEquals "www.mavencentral.com", search.search("mvn", options).get(0)
 
 
     }
