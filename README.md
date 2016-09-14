@@ -1,5 +1,7 @@
 # passlock
 ### Simple command line password manager
+****Coming Soon****
+
 [![Build Status](https://travis-ci.org/xdrop/PassLock.svg?branch=master)](https://travis-ci.org/xdrop/passlock)
 
 [![Screen capture](http://xdrop.me/img/passlock-terminal.png)](https://github.com/xdrop/passlock)
