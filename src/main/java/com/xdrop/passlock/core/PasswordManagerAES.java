@@ -19,7 +19,7 @@ import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
 import java.util.List;
 
-public class PasswordManagerAES implements PasswordManager<AESEncryptionModel,AESEncryptionData> {
+public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, AESEncryptionData> {
 
     private final static Logger LOG = LoggerFactory.getLogger(PasswordManagerAES.class);
 
@@ -86,7 +86,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel,AE
      * master password.
      *
      * @param reference A unique reference identifier for this entry
-     * @param masterKey  The password with which this should be decrypted
+     * @param masterKey The password with which this should be decrypted
      * @return The decrypted password in byte[] UTF-8 format
      * @throws RefNotFoundException Thrown if the reference used
      *                              could not be found in the
@@ -104,6 +104,63 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel,AE
 
         LOG.debug("Decrypting with key...");
         return encryptionModel.decrypt(pass.getEncryptionData(), masterKey);
+
+    }
+
+    /**
+     * Renames a password reference to another
+     *
+     * @param reference    Old reference
+     * @param newReference New reference
+     * @throws RefNotFoundException Thrown if the old reference
+     *                              doesn't exist
+     */
+    @Override
+    public void rename(String reference, String newReference) throws RefNotFoundException {
+
+        LOG.debug("Renaming " + reference + " to " + newReference + "...");
+        PasswordEntry<AESEncryptionData> passwordEntry = datasource.getPass(reference);
+
+        passwordEntry.setRef(newReference);
+
+        datasource.updatePass(reference, passwordEntry);
+
+    }
+
+    /**
+     * Updates a password
+     *
+     * @param reference   Reference to the password
+     * @param masterKey   The master key used to encrypt the new enty
+     * @param newPassword The new password to store
+     * @throws RefNotFoundException Thrown if the reference doesn't exist
+     */
+    @Override
+    public void updatePassword(String reference, char[] masterKey, char[] newPassword) throws RefNotFoundException {
+
+        LOG.debug("Updating password for " + reference);
+
+        AESEncryptionData encryptionData = encryptionModel.encrypt(ByteUtils.getBytes(newPassword), masterKey);
+
+        PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
+        passwordEntry.setDescription("");
+        passwordEntry.setRef(reference);
+        passwordEntry.setEncryptionData(encryptionData);
+
+        datasource.updatePass(reference, passwordEntry);
+
+    }
+
+    /**
+     * Deletes a password
+     *
+     * @param reference Reference to the password
+     * @throws RefNotFoundException Thrown if the reference doesn't exist
+     */
+    @Override
+    public void deletePassword(String reference) throws RefNotFoundException {
+
+        datasource.delPass(reference);
 
     }
 
@@ -139,7 +196,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel,AE
     @Override
     public boolean isInitialized() {
 
-        try{
+        try {
 
             datasource.getPass("master");
 

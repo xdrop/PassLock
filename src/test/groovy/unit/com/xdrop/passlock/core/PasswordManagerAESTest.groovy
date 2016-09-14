@@ -4,8 +4,9 @@ import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.crypto.aes.AESEncryptionData
 import com.xdrop.passlock.crypto.aes.AESEncryptionModel
 import com.xdrop.passlock.datasource.Datasource
+import com.xdrop.passlock.exceptions.RefNotFoundException
 import com.xdrop.passlock.utils.ByteUtils
-
+import org.easymock.Capture
 
 import static org.easymock.EasyMock.*;
 import com.xdrop.passlock.model.PasswordEntry
@@ -135,4 +136,88 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         assert masterKey == ByteUtils.getChars(storedKey)
 
     }
+
+    void testRename() {
+
+        def ds = mock(Datasource)
+
+        def captured = new Capture<PasswordEntry>()
+
+        expect(ds.getPass(eq("def")))
+            .andReturn(new PasswordEntry())
+
+        expect(ds.updatePass(eq("def"), capture(captured)))
+            .andVoid()
+
+        replay(ds)
+
+
+        def pwman = new PasswordManagerAES(ds)
+
+        pwman.rename("def", "new")
+
+        assert captured.value.ref == "new"
+
+    }
+
+    void testUpdate() {
+
+        def ds = mock(Datasource)
+        def em = mock(AESEncryptionModel)
+
+        def captured = new Capture<PasswordEntry>()
+
+        expect(ds.getPass(eq("def")))
+                .andReturn(new PasswordEntry())
+
+        expect(ds.updatePass(eq("def"), capture(captured)))
+                .andVoid()
+
+        byte[] input1 = ByteUtils.getBytes("newpass".toCharArray())
+        def input2 = "nonaesmaster".toCharArray()
+
+        def captured1 = new Capture<byte[]>()
+        def captured2 = new Capture<char[]>()
+
+        expect(em.encrypt(capture(captured1),capture(captured2)))
+            .andReturn(new AESEncryptionData([0] as byte[],[0] as byte[], [0] as byte[]))
+
+        replay(ds, em)
+
+        def pwman = new PasswordManagerAES(ds)
+        pwman.setEncryptionModel(em)
+
+
+        pwman.updatePassword("def", input2, "newpass".toCharArray())
+
+        assert captured.value.ref == "def"
+        assert captured1.value == input1
+        assert captured2.value == input2
+
+    }
+
+    void testDelete() {
+
+        def ds = mock(Datasource)
+
+        expect(ds.delPass(eq("def")))
+            .andVoid()
+            .andStubThrow(new RefNotFoundException())
+
+
+        replay(ds)
+
+        def pwman = new PasswordManagerAES(ds)
+
+        pwman.deletePassword("def")
+
+        shouldFail(RefNotFoundException) {
+
+            pwman.deletePassword("def")
+
+        }
+
+    }
+
+
 }

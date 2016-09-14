@@ -2,6 +2,7 @@ package com.xdrop.passlock.core
 
 import com.xdrop.passlock.LogGroovyTestCase
 import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource
+import com.xdrop.passlock.exceptions.RefNotFoundException
 import com.xdrop.passlock.search.DefaultSearch
 
 import java.security.InvalidKeyException
@@ -77,4 +78,33 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         assert pwman.getPassword("newpass", masterKey) == "hideme".getBytes("UTF-8")
 
     }
+
+    void testRename() {
+
+        pwman.rename("def", "new")
+
+        assert "encryptme".getBytes("UTF-8") == pwman.getPassword("new", "nonaesmaster".toCharArray())
+
+    }
+
+    void testUpdate() {
+
+        pwman.updatePassword("def", "nonaesmaster".toCharArray(), "newpass".toCharArray())
+
+        assertEquals "newpass".getBytes("UTF-8"), pwman.getPassword("def", "nonaesmaster".toCharArray())
+
+    }
+
+    void testDelete() {
+
+        pwman.deletePassword("def")
+
+        shouldFail(RefNotFoundException) {
+
+            pwman.getPassword("def")
+
+        }
+
+    }
+
 }

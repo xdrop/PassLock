@@ -71,8 +71,15 @@ public class GetCommand extends Command {
 
                     }
 
+                    tio.writeln("[q] Quit");
+
                     tio.writeln("\nEnter choice:");
-                    choice = choices.get(tio.getLine());
+                    String line = tio.getLine();
+                    choice = choices.get(line);
+
+                    if(line.equalsIgnoreCase("q")){
+                        throw new CommandException("Quit");
+                    }
 
                     if(choice != null) {
                         selectionMade = true;

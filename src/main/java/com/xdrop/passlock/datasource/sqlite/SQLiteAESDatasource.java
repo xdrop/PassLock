@@ -6,7 +6,6 @@ import com.xdrop.passlock.exceptions.AlreadyExistsException;
 import com.xdrop.passlock.exceptions.InvalidDataException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 import com.xdrop.passlock.model.PasswordEntry;
-import com.xdrop.passlock.search.FuzzySearcher;
 import com.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
@@ -134,13 +132,13 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         if (!validate(newPasswordEntry)) throw new InvalidDataException();
 
-        String sql = "UPDATE passwords SET ref=?, description=?, payload=?, salt=?, iv=?, algo=?" +
+        String sql = "UPDATE passwords SET ref=?, description=?, payload=?, salt=?, iv=?, algo=? " +
                 "WHERE ref=?";
         AESEncryptionData aesEncryptionData = newPasswordEntry.getEncryptionData();
 
         try {
 
-            PreparedStatement preparedStatement = bindPreparedStatement(ref, newPasswordEntry, sql, aesEncryptionData);
+            PreparedStatement preparedStatement = bindPreparedStatement(newPasswordEntry, sql, aesEncryptionData);
 
             preparedStatement.setString(7, ref);
 
@@ -170,7 +168,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
         try {
 
-            PreparedStatement preparedStatement = bindPreparedStatement(ref, passwordEntry, sql, aesEncryptionData);
+            PreparedStatement preparedStatement = bindPreparedStatement(passwordEntry, sql, aesEncryptionData);
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -190,11 +188,11 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     }
 
-    private PreparedStatement bindPreparedStatement(String ref, PasswordEntry<AESEncryptionData> passwordEntry, String sql, AESEncryptionData aesEncryptionData) throws SQLException {
+    private PreparedStatement bindPreparedStatement(PasswordEntry<AESEncryptionData> passwordEntry, String sql, AESEncryptionData aesEncryptionData) throws SQLException {
 
         PreparedStatement preparedStatement = con.prepareStatement(sql);
 
-        preparedStatement.setString(1, ref);
+        preparedStatement.setString(1, passwordEntry.getRef());
         preparedStatement.setString(2, passwordEntry.getDescription());
         preparedStatement.setString(3, ByteUtils.toBase64(aesEncryptionData.getEncryptedPayload()));
         preparedStatement.setString(4, ByteUtils.toBase64(aesEncryptionData.getSalt()));

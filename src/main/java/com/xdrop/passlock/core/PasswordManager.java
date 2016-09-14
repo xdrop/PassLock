@@ -55,6 +55,33 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
     byte[] getPassword(String reference, char[] masterKey)
             throws RefNotFoundException, InvalidKeyException;
 
+    /**
+     * Renames a password reference to another
+     *
+     * @param reference    Old reference
+     * @param newReference New reference
+     * @throws RefNotFoundException Thrown if the old reference
+     *                              doesn't exist
+     */
+    void rename(String reference, String newReference) throws RefNotFoundException;
+
+    /**
+     * Updates a password
+     *
+     * @param reference   Reference to the password
+     * @param masterKey   The master key used to encrypt the new enty
+     * @param newPassword The new password to store
+     * @throws RefNotFoundException Thrown if the reference doesn't exist
+     */
+    void updatePassword(String reference, char[] masterKey, char[] newPassword) throws RefNotFoundException;
+
+    /**
+     * Deletes a password
+     *
+     * @param reference Reference to the password
+     * @throws RefNotFoundException Thrown if the reference doesn't exist
+     */
+    void deletePassword(String reference) throws RefNotFoundException;
 
     /**
      * Initializes and *resets* the database. All data in it will be lost!
@@ -66,6 +93,7 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
 
     /**
      * Checks whether the datasource is already initialized
+     *
      * @return True if datasource is initialized
      */
     boolean isInitialized();
