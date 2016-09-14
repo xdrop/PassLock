@@ -27,7 +27,7 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
 
         def passwordEntry = new PasswordEntry<AESEncryptionData>();
 
-        passwordEntry.ref = "www.bing.com"
+        passwordEntry.ref = "www.google.com"
         passwordEntry.description = "description example"
 
         passwordEntry.encryptionData = new AESEncryptionData();
@@ -35,9 +35,8 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
         passwordEntry.encryptionData.salt = ByteUtils.fromBase64("salt==")
         passwordEntry.encryptionData.encryptedPayload = ByteUtils.fromBase64("enc==")
 
-        datasource.addPass("www.bing.com", passwordEntry)
         datasource.addPass("www.google.com", passwordEntry)
-        datasource.addPass("www.facebook.com", passwordEntry)
+
     }
 
     @Test
@@ -72,11 +71,11 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
 
     void testUpdatePass() {
 
-        def passwordEntry = dummyPasswordEntry("www.bing.com", "updated example")
+        def passwordEntry = dummyPasswordEntry("www.google.com", "updated example")
 
-        datasource.updatePass("www.bing.com", passwordEntry)
+        datasource.updatePass("www.google.com", passwordEntry)
 
-        def pass = datasource.getPass("www.bing.com")
+        def pass = datasource.getPass("www.google.com")
 
         assertNotNull pass
         assertEquals pass.description, "updated example"

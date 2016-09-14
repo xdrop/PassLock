@@ -166,7 +166,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
 
     /**
-     * Initializes and *resets* the database. All data in it will be lost!
+     * Initializes and <b>resets</b> the database. All data in it will be lost!
      *
      * @param masterPass The master password to initialize the database
      *                   with.
@@ -261,6 +261,11 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         }
 
+    }
+
+    @Override
+    public boolean exists(String ref) {
+        return false;
     }
 
     /**

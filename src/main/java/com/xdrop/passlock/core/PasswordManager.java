@@ -118,6 +118,13 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      */
     char[] getMasterKey(char[] password) throws InvalidKeyException;
 
+    /**
+     * Checks if this reference exists
+     *
+     * @param ref Input reference
+     * @return True if exists
+     */
+    boolean exists(String ref);
 
     /**
      * Searches the datasource to find a password entry matching
