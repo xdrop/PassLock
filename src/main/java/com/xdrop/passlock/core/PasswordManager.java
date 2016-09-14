@@ -145,4 +145,16 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      *                              entries with the specified cutoff level
      */
     List<String> search(FuzzySearcher searcher, String query, int limit) throws RefNotFoundException;
+
+    /**
+     * Copies a password
+     *
+     * @param from Source password
+     * @param to   Target password
+     * @throws RefNotFoundException   Thrown if the old reference
+     *                                doesn't exist
+     * @throws AlreadyExistsException Thrown if the new reference already
+     *                                exists
+     */
+    void copy(String from, String to) throws RefNotFoundException, AlreadyExistsException;
 }

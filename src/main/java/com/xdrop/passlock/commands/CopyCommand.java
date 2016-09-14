@@ -2,21 +2,22 @@ package com.xdrop.passlock.commands;
 
 import com.beust.jcommander.Parameter;
 import com.xdrop.passlock.core.PasswordManager;
+import com.xdrop.passlock.exceptions.AlreadyExistsException;
 import com.xdrop.passlock.exceptions.CommandException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 
 import java.util.List;
 
-public class RenameCommand extends Command {
+public class CopyCommand extends Command {
 
-    public RenameCommand(PasswordManager passwordManager) {
+    public CopyCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
 
     @Parameter(names = {"--target", "-t"})
     private String targetName;
 
-    @Parameter(description = "Reference to rename")
+    @Parameter(description = "from to or simply from")
     private List<String> name;
 
     @Override
@@ -51,19 +52,19 @@ public class RenameCommand extends Command {
             }
 
             if(targetName == null){
-                tio.write("Enter the new name:");
+                tio.write("Enter target name:");
                 targetName = tio.getLine().trim();
             }
 
-            passwordManager.rename(ref, targetName);
-            tio.writeln("Password [" + ref + "] renamed to -> [" + targetName + "]");
+            passwordManager.copy(ref, targetName);
+            tio.writeln("Password [" + ref + "] copied to -> [" + targetName + "]");
 
         } catch (RefNotFoundException e) {
             throw new CommandException("Source password could not be found.");
+        } catch (AlreadyExistsException e) {
+            throw new CommandException("Target password already exists.");
         }
 
 
     }
-
-
 }

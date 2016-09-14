@@ -51,12 +51,6 @@ public class PassLock {
         TextInputOutput tio = new TextInputOutput();
         PasswordManager passwordManager = new PasswordManagerAES(new SQLiteAESDatasource());
 
-        if(!passwordManager.isInitialized()){
-            try {
-                tio.writeln("This is your first time running, initializing database");
-                new ResetCommand(passwordManager).execute();
-            } catch (CommandException ignored) {}
-        }
 
         MainCommand cm = new MainCommand();
         JCommander jc = new JCommander(cm);
@@ -84,6 +78,9 @@ public class PassLock {
         RenameCommand renameCommand = new RenameCommand(passwordManager);
         registerCommand(jc, renameCommand, commands, "rename", "mv", "r");
 
+        CopyCommand copyCommand = new CopyCommand(passwordManager);
+        registerCommand(jc, copyCommand, commands, "copy", "cp", "c");
+
         String command;
 
         try {
@@ -97,6 +94,17 @@ public class PassLock {
         if(command == null) {
             tio.writeln("Invalid command, exiting.");
             return;
+        }
+
+        if(!passwordManager.isInitialized()){
+            try {
+                tio.writeln("This is your first time running, initializing database");
+                new ResetCommand(passwordManager).execute();
+
+                if(commands.get(command) instanceof ResetCommand) {
+                    return;
+                }
+            } catch (CommandException ignored) {}
         }
 
         try {

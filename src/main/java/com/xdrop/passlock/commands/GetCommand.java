@@ -3,21 +3,14 @@ package com.xdrop.passlock.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.xdrop.passlock.core.PasswordManager;
-import com.xdrop.passlock.core.PasswordManagerAES;
-import com.xdrop.passlock.crypto.aes.AESEncryptionData;
-import com.xdrop.passlock.crypto.aes.AESEncryptionModel;
-import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource;
 import com.xdrop.passlock.exceptions.CommandException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
-import com.xdrop.passlock.io.TextInputOutput;
 import com.xdrop.passlock.search.DefaultSearch;
-import com.xdrop.passlock.utils.ByteUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +21,7 @@ public class GetCommand extends Command {
     private final static Logger LOG = LoggerFactory.getLogger(GetCommand.class);
 
     @Parameter(description = "Reference to the entry")
-    private List<String> ref;
+    private List<String> names;
 
     public GetCommand(PasswordManager passwordManager) {
         super(passwordManager);
@@ -36,11 +29,24 @@ public class GetCommand extends Command {
 
     public void execute() throws CommandException {
 
-        if(ref == null || ref.size() != 1){
+        if(names == null){
             throw new CommandException("Invalid number of arguments.");
         }
 
-        String ref = this.ref.get(0);
+        String ref;
+
+        if (names.size() > 1){
+
+            ref = "";
+
+            for (String s : names) {
+                ref = ref + " " + s;
+            }
+
+        } else {
+            ref = names.get(0);
+        }
+
 
         try {
 
@@ -119,7 +125,4 @@ public class GetCommand extends Command {
 
     }
 
-    public void setRef(List<String> ref) {
-        this.ref = ref;
-    }
 }

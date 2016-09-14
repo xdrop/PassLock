@@ -298,10 +298,31 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
     /**
      * Lists all the passwords
+     *
      * @return List of passwords
      */
-    public List<String> list(){
+    public List<String> list() {
         return datasource.getPassList();
+    }
+
+    /**
+     * Copies a password
+     *
+     * @param from Source password
+     * @param to   Target password
+     * @throws RefNotFoundException   Thrown if the old reference
+     *                                doesn't exist
+     * @throws AlreadyExistsException Thrown if the new reference already
+     *                                exists
+     */
+    @Override
+    public void copy(String from, String to) throws RefNotFoundException, AlreadyExistsException {
+
+        PasswordEntry<AESEncryptionData> old = datasource.getPass(from);
+        old.setRef(to);
+
+        datasource.addPass(to, old);
+
     }
 
 
