@@ -127,6 +127,12 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
     boolean exists(String ref);
 
     /**
+     * Lists all the passwords
+     * @return List of passwords
+     */
+    List<String> list();
+
+    /**
      * Searches the datasource to find a password entry matching
      * {@code ref}, and returns the list of the closest
      * matches.

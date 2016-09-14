@@ -265,7 +265,14 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
     @Override
     public boolean exists(String ref) {
-        return false;
+
+        try {
+            datasource.getPass(ref);
+        } catch (RefNotFoundException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -289,10 +296,18 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
         return searcher.search(query, passList, limit);
     }
 
+    /**
+     * Lists all the passwords
+     * @return List of passwords
+     */
+    public List<String> list(){
+        return datasource.getPassList();
+    }
+
+
     public void setDatasource(Datasource<AESEncryptionData> datasource) {
         this.datasource = datasource;
     }
-
 
     public void setEncryptionModel(EncryptionModel<AESEncryptionData> encryptionModel) {
         this.encryptionModel = encryptionModel;

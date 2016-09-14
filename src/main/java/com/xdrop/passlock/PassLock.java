@@ -15,6 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -63,32 +64,35 @@ public class PassLock {
         Map<String, Command> commands = new HashMap<>();
 
         AddCommand addCommand = new AddCommand(passwordManager);
-        jc.addCommand("add", addCommand);
-        jc.addCommand("a", addCommand);
-        commands.put("add", addCommand);
+        registerCommand(jc, addCommand, commands, "add", "a");
 
         DeleteCommand deleteCommand = new DeleteCommand(passwordManager);
-        jc.addCommand("delete", deleteCommand);
-        jc.addCommand("d", deleteCommand);
-        commands.put("delete", deleteCommand);
+        registerCommand(jc, deleteCommand, commands, "delete", "d", "del");
 
         UpdateCommand updateCommand = new UpdateCommand(passwordManager);
-        jc.addCommand("update", updateCommand);
-        jc.addCommand("u", updateCommand);
-        commands.put("update", updateCommand);
+        registerCommand(jc, updateCommand, commands, "update", "u");
 
         GetCommand getCommand = new GetCommand(passwordManager);
-        jc.addCommand("get", getCommand);
-        jc.addCommand("g", getCommand);
-        commands.put("get", getCommand);
+        registerCommand(jc, getCommand, commands, "get", "g");
 
         ResetCommand resetCommand = new ResetCommand(passwordManager);
-        jc.addCommand("reset", resetCommand);
-        commands.put("reset", resetCommand);
+        registerCommand(jc, resetCommand, commands, "reset", "rst");
 
+        ListCommand listCommand = new ListCommand(passwordManager);
+        registerCommand(jc, listCommand, commands, "list", "l", "ls");
 
-        jc.parse(args);
-        String command = jc.getParsedCommand();
+        RenameCommand renameCommand = new RenameCommand(passwordManager);
+        registerCommand(jc, renameCommand, commands, "rename", "mv", "r");
+
+        String command;
+
+        try {
+            jc.parse(args);
+            command = jc.getParsedCommand();
+        }  catch (Exception e) {
+            tio.writeln("Invalid command");
+            return;
+        }
 
         if(command == null) {
             tio.writeln("Invalid command, exiting.");
@@ -108,6 +112,16 @@ public class PassLock {
             tio.writeln(ce.getMessage());
         }
 
+
+    }
+
+    private static void registerCommand(JCommander jc, Command command, Map<String, Command> commands, String ... args) {
+
+        for(String s : args) {
+
+            jc.addCommand(s, command);
+            commands.put(s, command);
+        }
 
     }
 

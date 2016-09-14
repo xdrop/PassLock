@@ -1,38 +1,46 @@
 package com.xdrop.passlock.commands;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.xdrop.passlock.core.PasswordManager;
 import com.xdrop.passlock.exceptions.CommandException;
 import com.xdrop.passlock.exceptions.RefNotFoundException;
 
 import java.util.List;
 
-@Parameters(commandDescription = "Deletes a password")
-public class DeleteCommand extends Command {
+public class RenameCommand extends Command {
 
-    public DeleteCommand(PasswordManager passwordManager) {
+    public RenameCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
 
-    @Parameter(description = "Reference to delete")
-    private List<String> name;
+    @Parameter(names = {"--target", "-t"})
+    private String targetName;
 
+    @Parameter(description = "Reference to rename")
+    private List<String> name;
 
     @Override
     public void execute() throws CommandException {
 
-        if(name == null || name.size() != 1){
+        if(name == null || name.size() < 1 || name.size() > 2){
             throw new CommandException("Invalid number of arguments.");
         }
 
-        String ref = name.get(0);
+        String ref;
+
+        if (name.size() == 2) {
+            ref = name.get(0);
+            targetName = name.get(1);
+        } else{
+            ref = name.get(0);
+        }
+
 
         tio.write("Please enter your master password: ");
 
         char[] masterPassword = tio.getSecure();
 
-        try {
+        try{
 
             if ( !passwordManager.exists(ref) ) {
                 throw new CommandException("Invalid reference, password doesn't exist");
@@ -42,27 +50,20 @@ public class DeleteCommand extends Command {
                 throw new CommandException("Invalid master password");
             }
 
-            tio.writeln("Are you absolutely sure you want to delete [" + ref + "]?");
-            tio.write("Y/N:");
-
-            String in = tio.getLine();
-
-            if (in.equalsIgnoreCase("y")) {
-
-                passwordManager.deletePassword(ref);
-                tio.writeln("Deleted [" + ref + "]");
-
-            } else {
-
-                tio.writeln("Quitting");
-
+            if(targetName == null){
+                tio.write("Enter the new name:");
+                targetName = tio.getLine().trim();
             }
 
+            passwordManager.rename(ref, targetName);
+            tio.writeln("Password [" + ref + "] renamed to -> [" + targetName + "]");
 
         } catch (RefNotFoundException e) {
-            throw new CommandException("Invalid password");
+            e.printStackTrace();
         }
 
 
     }
+
+
 }

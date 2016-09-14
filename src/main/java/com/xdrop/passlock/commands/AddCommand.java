@@ -8,6 +8,7 @@ import com.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource;
 import com.xdrop.passlock.exceptions.AlreadyExistsException;
 import com.xdrop.passlock.exceptions.CommandException;
 import com.xdrop.passlock.io.TextInputOutput;
+import com.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +25,8 @@ public class AddCommand extends Command {
 
     private final static Logger LOG = LoggerFactory.getLogger(AddCommand.class);
 
-    @Parameter(names = {"--description", "--desc", "-d"})
-    private String description;
-
     @Parameter(names = {"--pass", "-p"})
-    private char[] newPassword;
+    private String newPassword;
 
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
@@ -54,17 +52,18 @@ public class AddCommand extends Command {
         try {
 
             masterKey = passwordManager.getMasterKey(masterPassword);
+            char[] newPassChar;
 
             if(newPassword == null){
                 tio.write("Please enter the password you wish to store for " + ref + ": ");
+                newPassChar = tio.getSecure();
+            } else {
+                newPassChar = newPassword.toCharArray();
             }
 
-            char[] newPassword = tio.getSecure();
-
-
-            passwordManager.addPassword(description,
-                    newPassword,
-                    masterKey, name.get(0));
+            passwordManager.addPassword("",
+                    newPassChar,
+                    masterKey, ref);
 
             tio.writeln("Successfully stored password [" + ref + "]");
 
@@ -81,15 +80,4 @@ public class AddCommand extends Command {
 
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setNewPassword(char[] newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public void setName(List<String> name) {
-        this.name = name;
-    }
 }
