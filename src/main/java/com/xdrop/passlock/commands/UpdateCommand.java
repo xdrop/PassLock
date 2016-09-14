@@ -18,7 +18,7 @@ public class UpdateCommand extends Command {
     }
 
     @Parameter(names = {"--pass", "-p"})
-    private char[] newPassword;
+    private String newPassword;
 
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
@@ -38,6 +38,7 @@ public class UpdateCommand extends Command {
 
         char[] masterPassword = tio.getSecure();
         char[] masterKey;
+        char[] newPassC;
 
         try {
 
@@ -49,11 +50,13 @@ public class UpdateCommand extends Command {
 
             if(newPassword == null){
                 tio.write("Please enter the new password you wish to store for [" + ref + "]: ");
-                newPassword = tio.getSecure();
+                newPassC = tio.getSecure();
+            } else{
+                newPassC = newPassword.toCharArray();
             }
 
             passwordManager.updatePassword(ref,
-                    masterKey, newPassword);
+                    masterKey, newPassC);
 
             tio.writeln("Successfully updated password for [" + ref + "]");
 
