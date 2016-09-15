@@ -3,6 +3,11 @@ package com.xdrop.passlock.settings;
 public class DefaultSettings implements Settings {
 
     @Override
+    public String getDbPath(){
+        return "store.db";
+    }
+
+    @Override
     public int getNoOfSuggestions() {
         return 5;
     }
