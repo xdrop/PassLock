@@ -7,6 +7,9 @@ import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
 import me.xdrop.passlock.search.DefaultSearch;
 
+import me.xdrop.passlock.search.FuzzySearcher;
+import me.xdrop.passlock.settings.Settings;
+import me.xdrop.passlock.settings.SettingsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +37,11 @@ public class GetCommand extends Command {
         }
 
         String ref;
+        Settings settings = SettingsProvider.INSTANCE.getSettings();
+
+        FuzzySearcher fuzzySearcher = new DefaultSearch(settings.getCertainMatchThreshold(),
+                                                        settings.getRejectThreshold());
+        int numberOfSuggestions = settings.getNoOfSuggestions();
 
         if (names.size() > 1){
 
@@ -50,7 +58,7 @@ public class GetCommand extends Command {
 
         try {
 
-            List<String> searchResults = passwordManager.search(new DefaultSearch(), ref, 5);
+            List<String> searchResults = passwordManager.search(fuzzySearcher, ref, numberOfSuggestions);
 
             if (searchResults.size() == 0) {
                 throw new CommandException("Couldn't find password with reference: " + ref);

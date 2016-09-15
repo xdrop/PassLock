@@ -6,8 +6,13 @@ public interface Settings {
 
     int getNoOfSuggestions();
 
-    int getThreshold();
+    int getRejectThreshold();
 
     String getAlgorithm();
 
+    String userDir();
+
+    String configFilePath();
+
+    int getCertainMatchThreshold();
 }

@@ -4,6 +4,7 @@ import me.xdrop.passlock.crypto.aes.AESEncryptionData;
 import me.xdrop.passlock.datasource.Datasource;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.InvalidDataException;
+import me.xdrop.passlock.exceptions.NotInitalizedException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
 import me.xdrop.passlock.model.PasswordEntry;
 import me.xdrop.passlock.utils.ByteUtils;
@@ -18,7 +19,15 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     private final static Logger LOG = LoggerFactory.getLogger(SQLiteAESDatasource.class);
 
-    private Connection con = SQLiteConnection.connect();
+    private Connection con;
+
+    public SQLiteAESDatasource(String path) {
+
+        String jdbcUrl = "jdbc:sqlite:" + path;
+        LOG.debug("JDBC: " + jdbcUrl);
+        con = SQLiteConnection.connect(jdbcUrl);
+
+    }
 
     public PasswordEntry<AESEncryptionData> getPass(String ref) throws RefNotFoundException {
 
@@ -203,18 +212,33 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     }
 
+    @Override
+    public boolean isCreated() {
+
+        // for now, we are lazy
+
+        try {
+            con.createStatement().execute("SELECT * FROM passwords");
+        }  catch (SQLException e) {
+            return false;
+        }
+
+        return true;
+
+    }
+
 
     @Override
     public void initialize() {
 
-        SQLitePrepare.createPassTable();
+        SQLitePrepare.createPassTable(con);
 
     }
 
     @Override
     public void reset() {
 
-        SQLitePrepare.resetTable();
+        SQLitePrepare.resetTable(con);
 
     }
 
@@ -234,4 +258,5 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
                 aesEncryptionData.getSalt() != null;
 
     }
+
 }

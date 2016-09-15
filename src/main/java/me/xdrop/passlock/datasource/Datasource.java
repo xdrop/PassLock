@@ -2,6 +2,7 @@ package me.xdrop.passlock.datasource;
 
 import me.xdrop.passlock.crypto.aes.AESEncryptionData;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
+import me.xdrop.passlock.exceptions.NotInitalizedException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
 import me.xdrop.passlock.model.EncryptionData;
 import me.xdrop.passlock.model.PasswordEntry;
@@ -19,6 +20,8 @@ public interface Datasource <T extends EncryptionData> {
     void updatePass(String ref, PasswordEntry<AESEncryptionData> newPasswordEntry) throws RefNotFoundException;
 
     void addPass(String ref, PasswordEntry<T> passwordEntry) throws AlreadyExistsException;
+
+    boolean isCreated();
 
     void initialize();
 

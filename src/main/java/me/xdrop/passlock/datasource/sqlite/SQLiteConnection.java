@@ -11,11 +11,9 @@ public class SQLiteConnection {
 
     private final static Logger LOG = LoggerFactory.getLogger(SQLiteConnection.class);
 
-    private final static String jdbcUrl = "jdbc:sqlite:store.db";
-
     private static Connection cachedConnection;
 
-    public static Connection connect() {
+    public static Connection connect(String jdbcUrl) {
 
         if(cachedConnection != null) return cachedConnection;
 

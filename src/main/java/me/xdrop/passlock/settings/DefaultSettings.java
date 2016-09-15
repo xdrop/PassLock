@@ -1,10 +1,12 @@
 package me.xdrop.passlock.settings;
 
-public class DefaultSettings implements Settings {
+import java.io.File;
+
+public abstract class DefaultSettings implements Settings {
 
     @Override
     public String getDbPath(){
-        return "store.db";
+        return userDir() + File.separator + "store.db";
     }
 
     @Override
@@ -13,8 +15,8 @@ public class DefaultSettings implements Settings {
     }
 
     @Override
-    public int getThreshold() {
-        return 70;
+    public int getRejectThreshold() {
+        return 40;
     }
 
     @Override
@@ -22,4 +24,18 @@ public class DefaultSettings implements Settings {
         return "AES";
     }
 
+    @Override
+    public String userDir() {
+        return System.getProperty("user.home") + File.separator + ".passlock";
+    }
+
+    @Override
+    public String configFilePath() {
+        return userDir() + File.separator + "config";
+    }
+
+    @Override
+    public int getCertainMatchThreshold(){
+        return 94;
+    }
 }

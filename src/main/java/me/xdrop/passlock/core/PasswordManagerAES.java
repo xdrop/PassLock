@@ -199,6 +199,10 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
             datasource.getPass("master");
 
+            if (!datasource.isCreated()){
+                return false;
+            }
+
         } catch (RefNotFoundException e) {
             return false;
         }

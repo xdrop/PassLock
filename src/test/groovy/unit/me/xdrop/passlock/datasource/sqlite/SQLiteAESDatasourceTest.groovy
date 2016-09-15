@@ -17,7 +17,7 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
     @Before
     protected void setUp() {
 
-        PropertyConfigurator.configure(PassLock.loadPropertiesFile("log.properties"));
+        PropertyConfigurator.configure(PassLock.loadResourceProperties("log.properties"));
 
         datasource.reset()
 

@@ -14,9 +14,8 @@ public class SQLitePrepare {
     /**
      * Creates the SQLite passwords table
      */
-    public static void createPassTable() {
+    public static void createPassTable(Connection sqLiteConnection) {
 
-        Connection sqLiteConnection = SQLiteConnection.connect();
 
         String sql =
                 "CREATE TABLE IF NOT EXISTS passwords (id integer PRIMARY KEY ,\n" +
@@ -30,15 +29,13 @@ public class SQLitePrepare {
     /**
      * Resets (deletes and recreates) the passwords table
      */
-    public static void resetTable() {
-
-        Connection sqLiteConnection = SQLiteConnection.connect();
+    public static void resetTable(Connection sqLiteConnection) {
 
         String sql = "DROP TABLE IF EXISTS passwords";
 
         performSingleTransaction(sqLiteConnection, sql);
 
-        createPassTable();
+        createPassTable(sqLiteConnection);
 
     }
 
@@ -55,13 +52,8 @@ public class SQLitePrepare {
 
             LOG.debug("SQL exception occurred", e);
 
-        } finally {
-           /* try {
-                sqLiteConnection.close();
-            } catch (SQLException e) {
-                LOG.debug("Failed to close con", e);
-            }*/
         }
+
     }
 
 
