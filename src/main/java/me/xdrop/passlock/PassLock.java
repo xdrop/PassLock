@@ -1,7 +1,6 @@
 package me.xdrop.passlock;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
 import me.xdrop.passlock.commands.*;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.core.PasswordManagerAES;
@@ -12,9 +11,9 @@ import me.xdrop.passlock.settings.Settings;
 import me.xdrop.passlock.settings.SettingsProvider;
 import me.xdrop.passlock.utils.GUtils;
 import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -23,8 +22,7 @@ import java.util.Properties;
 
 public class PassLock {
 
-    @Parameter(names = {"--db", "-f"})
-    private String dbpath;
+    private final static Logger LOG = LoggerFactory.getLogger(PassLock.class);
 
     public static Properties loadResourceProperties(String filename) {
 
@@ -51,7 +49,7 @@ public class PassLock {
 
     }
 
-    private static void registerCommand(JCommander jc, Command command, Map<String, Command> commands, String... args) {
+    private void registerCommand(JCommander jc, Command command, Map<String, Command> commands, String... args) {
 
         for (String s : args) {
 
@@ -71,7 +69,7 @@ public class PassLock {
         GUtils.createIfDoesntExist(settings.getDbPath());
 
         PasswordManager passwordManager =
-                new PasswordManagerAES(new SQLiteAESDatasource(settings.getDbPath()));
+                new PasswordManagerAES(null);
 
 
         MainCommand cm = new MainCommand();
@@ -110,7 +108,16 @@ public class PassLock {
             command = jc.getParsedCommand();
         } catch (Exception e) {
             tio.writeln("Invalid command");
+            System.out.println(e);
             return;
+        }
+
+        // we cheated by passing a null reference, now depending on if an argument was passed
+        // we create the datasource accordingly
+        if (cm.getDbPath() != null) {
+            passwordManager.setDatasource(new SQLiteAESDatasource(cm.getDbPath()));
+        } else{
+            passwordManager.setDatasource(new SQLiteAESDatasource(settings.getDbPath()));
         }
 
         if (command == null) {
