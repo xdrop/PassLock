@@ -65,7 +65,7 @@ public class KeyDerivation {
     }
 
     /**
-     * Generates an AES SecretKey through via a password and salt. The secret is
+     * Generates an AES SecretKey via a password and salt. The secret is
      * consistent as long as the password and salt passed are consistent.
      *
      * @param password

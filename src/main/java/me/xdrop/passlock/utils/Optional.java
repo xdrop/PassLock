@@ -186,9 +186,9 @@ public final class Optional<T> {
      * debugging. The exact presentation format is unspecified and may vary
      * between implementations and versions.
      *
-     * @implSpec If a value is present the result must include its string
+     * {@implSpec If a value is present the result must include its string
      * representation in the result. Empty and present Optionals must be
-     * unambiguously differentiable.
+     * unambiguously differentiable.}
      *
      * @return the string representation of this instance
      */

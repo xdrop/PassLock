@@ -1,6 +1,8 @@
 package me.xdrop.passlock.core;
 
 import me.xdrop.passlock.crypto.EncryptionModel;
+import me.xdrop.passlock.crypto.aes.AESEncryptionData;
+import me.xdrop.passlock.datasource.Datasource;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
 import me.xdrop.passlock.model.EncryptionData;
@@ -157,4 +159,10 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      *                                exists
      */
     void copy(String from, String to) throws RefNotFoundException, AlreadyExistsException;
+
+    /**
+     * Sets the datasource
+     * @param datasource Datasource
+     */
+    void setDatasource(Datasource<AESEncryptionData> datasource);
 }
