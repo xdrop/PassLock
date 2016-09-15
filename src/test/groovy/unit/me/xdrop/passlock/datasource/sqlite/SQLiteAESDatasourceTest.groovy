@@ -12,7 +12,7 @@ import org.junit.Test
 
 class SQLiteAESDatasourceTest extends LogGroovyTestCase {
 
-    def datasource = new SQLiteAESDatasource();
+    def datasource = new SQLiteAESDatasource("store.db");
 
     @Before
     protected void setUp() {
