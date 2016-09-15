@@ -1,7 +1,7 @@
 package com.xdrop.passlock.search;
 
-import com.xdrop.fuzzywuzzy.FuzzySearch;
-import com.xdrop.fuzzywuzzy.model.ExtractedResult;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 import com.xdrop.passlock.model.FuzzySearchResult;
 import com.xdrop.passlock.utils.Optional;
 import org.slf4j.Logger;
