@@ -7,6 +7,18 @@
     <groupId>com.xdrop</groupId>
     <artifactId>passlock</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -129,7 +141,6 @@
 
         </plugins>
     </build>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
@@ -208,27 +219,6 @@
 
     </dependencies>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-xdrop-FuzzyWuzzy-Java</id>
-            <name>bintray</name>
-            <url>http://dl.bintray.com/xdrop/FuzzyWuzzy-Java</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-xdrop-FuzzyWuzzy-Java</id>
-            <name>bintray-plugins</name>
-            <url>http://dl.bintray.com/xdrop/FuzzyWuzzy-Java</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 
 
