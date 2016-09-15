@@ -12,4 +12,10 @@ public enum SettingsProvider {
     public Settings getSettings() {
         return settings;
     }
+
+    public Settings loadFile(String path) {
+        settings = new SettingsFile(path);
+        return settings;
+    }
+
 }

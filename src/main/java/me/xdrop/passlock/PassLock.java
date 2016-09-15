@@ -108,7 +108,6 @@ public class PassLock {
             command = jc.getParsedCommand();
         } catch (Exception e) {
             tio.writeln("Invalid command");
-            System.out.println(e);
             return;
         }
 
@@ -118,6 +117,10 @@ public class PassLock {
             passwordManager.setDatasource(new SQLiteAESDatasource(cm.getDbPath()));
         } else{
             passwordManager.setDatasource(new SQLiteAESDatasource(settings.getDbPath()));
+        }
+
+        if(cm.getConfigFile() != null) {
+            SettingsProvider.INSTANCE.loadFile(cm.getConfigFile());
         }
 
         if (command == null) {
