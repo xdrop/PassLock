@@ -1,0 +1,30 @@
+PassLock 1.0.13
+Copyright (C) 2015 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Usage: plock [--config <path>] [--db <path>] [command] [parameters]
+
+Available commands:
+
+g,  get    <password to search for>                 :: Get a password 
+d,  delete <password to delete>                     :: Delete a password
+a,  add    [-p <newpass>] <identifier for password> :: Adds a new password
+u,  update [-p <newpass>] <target ref>              :: Updates a password
+cp, copy   [-t <target>]  <source ref>              :: Copies source to target
+mv, r      [-t <target>]  <source ref>              :: Renames source to target
+ls                                                  :: Lists all passwords
+reset                                               :: Resets the datasource
+
+* Ref indicates a reference/identifer for a password
+
+Examples:
+
+plock g www.google.com                          :: Get password for google
+plock a www.google.com                          :: Add password for google.com
+plock cp www.google.com www.gmail.com           :: Copy www.google.com to www.gmail.com
+plock cp www.google.com -t www.gmail.com        :: Copy www.google.com to www.gmail.com
+
+Please report any bugs to http://github.com/xdrop/passlock/issues
+
