@@ -16,3 +16,6 @@ passlock.iml
 store.db
 target/
 .DS_Store
+distribution/
+bin/plock
+*.zip
