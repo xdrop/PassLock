@@ -129,6 +129,11 @@ public class PassLock {
 
         if (command == null) {
             tio.writeln("Invalid command, exiting.");
+
+            try {
+                helpCommand.execute();
+            } catch (CommandException ignored) {}
+
             return;
         }
 
