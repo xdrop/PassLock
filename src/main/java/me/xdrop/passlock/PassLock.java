@@ -101,6 +101,9 @@ public class PassLock {
         CopyCommand copyCommand = new CopyCommand(passwordManager);
         registerCommand(jc, copyCommand, commands, "copy", "cp", "c");
 
+        HelpCommand helpCommand = new HelpCommand(passwordManager);
+        registerCommand(jc, helpCommand, commands, "--help", "-h");
+
         String command;
 
         try {
@@ -111,6 +114,10 @@ public class PassLock {
             return;
         }
 
+        if(cm.getConfigFile() != null) {
+            SettingsProvider.INSTANCE.loadFile(cm.getConfigFile());
+        }
+
         // we cheated by passing a null reference, now depending on if an argument was passed
         // we create the datasource accordingly
         if (cm.getDbPath() != null) {
@@ -119,9 +126,6 @@ public class PassLock {
             passwordManager.setDatasource(new SQLiteAESDatasource(settings.getDbPath()));
         }
 
-        if(cm.getConfigFile() != null) {
-            SettingsProvider.INSTANCE.loadFile(cm.getConfigFile());
-        }
 
         if (command == null) {
             tio.writeln("Invalid command, exiting.");
