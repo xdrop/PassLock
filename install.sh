@@ -1,7 +1,10 @@
 #!/bin/bash
 SOURCE=bin/plock
-TARGET="/usr/bin/plock"
-echo "Symlinking $SOURCE to $TARGET"
-ln -s "$SOURCE" $TARGET"
-mkdir -p ~/.passlock
-cp /config/passlock.config ~/.passlock/config 
+TARGET="/usr/local/bin/plock"
+echo "Symlinking to $TARGET"
+mkdir /usr/local/passlock
+cp -r . /usr/local/passlock
+chmod +x /usr/local/passlock/bin/plock
+ln -s "../passlock/bin/plock" "$TARGET"
+mkdir ~/.passlock
+cp config/passlock.config ~/.passlock/config 
