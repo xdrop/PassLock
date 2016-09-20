@@ -1,4 +1,4 @@
-if [ "$#" -ne 1 ]; then
+if [ "$#" -le 1 ]; then
   echo "Version missing " >&2
   exit 1
 fi

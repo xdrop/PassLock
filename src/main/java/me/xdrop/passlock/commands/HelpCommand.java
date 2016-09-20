@@ -11,7 +11,7 @@ public class HelpCommand extends Command {
 
     @Override
     public void execute() throws CommandException {
-        tio.writeln("PassLock 1.0.15-beta");
+        tio.writeln("PassLock 1.0.16-beta");
         tio.writeln("Copyright (C) 2015 Free Software Foundation, Inc.");
         tio.writeln("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>");
         tio.writeln("This is free software: you are free to change and redistribute it.");
