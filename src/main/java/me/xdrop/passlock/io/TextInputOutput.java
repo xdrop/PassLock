@@ -55,7 +55,10 @@ public class TextInputOutput {
 
     public char[] getSecure() {
 
-        return console.readPassword();
+        if (console != null)
+            return console.readPassword();
+        else
+            return scanner.nextLine().toCharArray();
 
     }
 

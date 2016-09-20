@@ -62,11 +62,11 @@ public class PassLock {
     private void init(String[] args) {
 
         PropertyConfigurator.configure(loadResourceProperties("log.properties"));
+        String datasourcePath;
 
         TextInputOutput tio = new TextInputOutput();
         Settings settings = SettingsProvider.INSTANCE.getSettings();
 
-        GUtils.createIfDoesntExist(settings.getDbPath());
 
         PasswordManager passwordManager =
                 new PasswordManagerAES(null);
@@ -118,13 +118,16 @@ public class PassLock {
             SettingsProvider.INSTANCE.loadFile(cm.getConfigFile());
         }
 
-        // we cheated by passing a null reference, now depending on if an argument was passed
-        // we create the datasource accordingly
+        /* we cheated by passing a null reference, now depending on if an argument was passed
+         * we create the datasource accordingly */
         if (cm.getDbPath() != null) {
-            passwordManager.setDatasource(new SQLiteAESDatasource(cm.getDbPath()));
+            datasourcePath = GUtils.resolvePath(cm.getDbPath());
         } else{
-            passwordManager.setDatasource(new SQLiteAESDatasource(settings.getDbPath()));
+            datasourcePath = GUtils.resolvePath(settings.getDbPath());
         }
+
+        GUtils.createIfDoesntExist(datasourcePath);
+        passwordManager.setDatasource(new SQLiteAESDatasource(datasourcePath));
 
 
         if (command == null) {

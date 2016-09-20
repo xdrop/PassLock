@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class GUtils {
@@ -20,17 +24,35 @@ public class GUtils {
 
     }
 
+    public static String resolvePath(String path) {
+        return path.replaceFirst("^~",System.getProperty("user.home"));
+    }
+
     public static boolean createIfDoesntExist(String path) {
 
-        File file = new File(path);
+        /* Unix and friends */
+        path = resolvePath(path);
 
-        if(file.exists()) return false;
+        Path pathToFile = Paths.get(path);
 
-        if(file.isDirectory()) {
-            return file.mkdirs();
-        } else{
-            return file.getParentFile().mkdirs();
+        try {
+
+            Files.createDirectories(pathToFile.getParent());
+            Files.createFile(pathToFile);
+
+            return true;
+
+        } catch (FileAlreadyExistsException fa) {
+
+            /* File already existed */
+            return false;
+
+        } catch (IOException ignored) {
+
+            return false;
+
         }
+
 
     }
 
