@@ -81,7 +81,7 @@ public class PassLock {
         registerCommand(jc, addCommand, commands, "add", "a");
 
         DeleteCommand deleteCommand = new DeleteCommand(passwordManager);
-        registerCommand(jc, deleteCommand, commands, "delete", "d", "del");
+        registerCommand(jc, deleteCommand, commands, "delete", "rm", "d");
 
         UpdateCommand updateCommand = new UpdateCommand(passwordManager);
         registerCommand(jc, updateCommand, commands, "update", "u");
