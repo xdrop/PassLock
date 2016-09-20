@@ -1,3 +1,4 @@
+cd $(dirname $0)  
 cat ./create_release.json | sed "s/tagname/$1/;s/releasename/$2/;s/releasedesc/$3/" > ./req.json
 echo Password: 
 read -s password
