@@ -1,6 +1,6 @@
 #!/bin/sh
 mvn clean package
-mv -f target/passlock-1.0-SNAPSHOT-jar-with-dependencies.jar bin/passlock.jar
+mv -f target/*-jar-with-dependencies.jar bin/passlock.jar
 cd bin && cat javastub.sh passlock.jar > plock
 chmod +x plock
 cd ..
@@ -9,5 +9,8 @@ cp bin/plock distribution/bin/plock
 mkdir -p distribution/config
 cp config/passlock.config distribution/config/passlock.config
 cp install.sh distribution/
-zip -r passlock.zip distribution/* 
+cp uninstall.sh distribution/
+rm -f passlock.zip 2>/dev/null
+
+cd distribution; zip -r ../passlock.zip * 
 
