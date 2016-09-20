@@ -6,7 +6,7 @@
 [![Screen capture](http://xdrop.me/img/passlock-terminal.png)](https://github.com/xdrop/passlock)
 
 ## Installation
-```
+```sh
 unzip passlock-<version>.zip -d passlock
 cd passlock
 sh install.sh
@@ -14,7 +14,7 @@ plock --help
 ```
 
 ## Uninstall
-```
+```sh
 sh /usr/local/passlock/uninstall.sh
 ```
 
