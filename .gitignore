@@ -20,3 +20,5 @@ distribution/
 bin/plock
 *.zip
 *Backup*
+
+req.json

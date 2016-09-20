@@ -9,4 +9,4 @@ chmod +x /usr/local/passlock/bin/plock
 ln -s "../passlock/bin/plock" "$TARGET"
 mkdir ~/.passlock
 cp config/passlock.config ~/.passlock/config 
-echo "Install succesful.
+echo "Install succesful."
