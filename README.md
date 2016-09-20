@@ -1,7 +1,7 @@
 # passlock
 ### Simple command line password manager (with style!)
 [![Build Status](https://travis-ci.org/xdrop/PassLock.svg?branch=master)](https://travis-ci.org/xdrop/passlock)
-[![GitHub release](https://img.shields.io/github/release/xdrop/passlock.svg?maxAge=3600)](https://github.com/xdrop/PassLock/releases)
+[![GitHub release](https://img.shields.io/github/release/xdrop/passlock.svg)](https://github.com/xdrop/PassLock/releases)
 
 [![Screen capture](http://xdrop.me/img/passlock-terminal.png)](https://github.com/xdrop/passlock)
 
