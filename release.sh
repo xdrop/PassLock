@@ -10,4 +10,4 @@ git add -u
 git commit -m "[release] $1"
 git tag $1
 git push --tags
-sh scripts/github_release.sh $1 $1 $2 "../passlock-$1.zip"
+sh scripts/github_release.sh "$1" "$1" "$2" "../passlock-$1.zip"

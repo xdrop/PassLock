@@ -21,4 +21,4 @@ bin/plock
 *.zip
 *Backup*
 
-req.json
+**/req.json

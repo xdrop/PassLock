@@ -10,6 +10,7 @@ mkdir -p distribution/config
 cp config/passlock.config distribution/config/passlock.config
 cp install.sh distribution/
 cp uninstall.sh distribution/
+cp usage distribution/
 rm -f passlock.zip 2>/dev/null
 
 cd distribution; zip -r ../passlock.zip * 
