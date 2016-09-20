@@ -6,7 +6,7 @@
 
     <groupId>me.xdrop</groupId>
     <artifactId>passlock</artifactId>
-    <version>1.0.18-beta</version>
+    <version>1.0.19-beta</version>
 
     <build>
         <plugins>
