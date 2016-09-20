@@ -1,0 +1,8 @@
+{
+  "tag_name": "tagname",
+  "target_commitish": "master",
+  "name": "releasename",
+  "body": "releasedesc",
+  "draft": false,
+  "prerelease": false
+}
