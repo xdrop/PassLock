@@ -13,5 +13,5 @@ cp uninstall.sh distribution/
 cp usage distribution/
 rm -f passlock.zip 2>/dev/null
 cp -r distribution/ passlock/
-zip -r ../passlock.zip passlock/*
+zip -r passlock.zip passlock/*
 rm -rf passlock 

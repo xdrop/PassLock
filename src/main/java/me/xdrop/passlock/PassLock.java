@@ -130,6 +130,20 @@ public class PassLock {
         passwordManager.setDatasource(new SQLiteAESDatasource(datasourcePath));
 
 
+        if (!passwordManager.isInitialized()) {
+
+            try {
+                tio.writeln("This is your first time running, initializing database");
+                new ResetCommand(passwordManager).execute();
+
+                if (command != null && commands.get(command) instanceof ResetCommand) {
+                    return;
+                }
+            } catch (CommandException ignored) {
+            }
+
+        }
+
         if (command == null) {
             tio.writeln("Invalid command, exiting.");
 
@@ -140,19 +154,6 @@ public class PassLock {
             return;
         }
 
-        if (!passwordManager.isInitialized()) {
-
-            try {
-                tio.writeln("This is your first time running, initializing database");
-                new ResetCommand(passwordManager).execute();
-
-                if (commands.get(command) instanceof ResetCommand) {
-                    return;
-                }
-            } catch (CommandException ignored) {
-            }
-
-        }
 
         try {
 
