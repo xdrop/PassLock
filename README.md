@@ -18,7 +18,7 @@
 
 ## Installation
 ```sh
-unzip passlock-<version>.zip -d passlock
+unzip passlock-<version>.zip 
 cd passlock
 sh install.sh
 plock --help
