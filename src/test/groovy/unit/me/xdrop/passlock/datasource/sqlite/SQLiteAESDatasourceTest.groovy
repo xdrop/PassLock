@@ -64,7 +64,6 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
             datasource.getPass("www.google.com")
         }
 
-
     }
 
     void testUpdatePass() {
@@ -81,7 +80,6 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
         shouldFail(RefNotFoundException){
             datasource.updatePass("www.nonexistent.com", passwordEntry)
         }
-
 
     }
 

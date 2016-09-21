@@ -158,13 +158,11 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
                 throw new RefNotFoundException();
             }
 
-
         } catch (SQLException e) {
 
             LOG.info("Failed to update", e);
 
         }
-
 
     }
 
@@ -191,7 +189,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             }
 
             LOG.info("SQL add exception", e);
-
 
         }
 
@@ -227,7 +224,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
     }
 
-
     @Override
     public void initialize() {
 
@@ -241,7 +237,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         SQLitePrepare.resetTable(con);
 
     }
-
 
     private boolean validate(PasswordEntry<AESEncryptionData> passwordEntry) {
 

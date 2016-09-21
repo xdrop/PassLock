@@ -29,7 +29,6 @@ class DefaultSearchTDD extends LogGroovyTestCase {
         assertEquals "laptoppass", search.search("lptp", options).get(0)
         assertEquals "www.mavencentral.com", search.search("mvn", options).get(0)
 
-
     }
 
     void testSearchSingle() {

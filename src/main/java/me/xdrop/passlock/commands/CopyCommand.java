@@ -36,7 +36,6 @@ public class CopyCommand extends Command {
             ref = name.get(0);
         }
 
-
         tio.write("Please enter your master password: ");
 
         char[] masterPassword = tio.getSecure();
@@ -64,7 +63,6 @@ public class CopyCommand extends Command {
         } catch (AlreadyExistsException e) {
             throw new CommandException("Target password already exists.");
         }
-
 
     }
 }

@@ -18,7 +18,6 @@ public class DeleteCommand extends Command {
     @Parameter(description = "Reference to delete")
     private List<String> name;
 
-
     @Override
     public void execute() throws CommandException {
 
@@ -58,11 +57,9 @@ public class DeleteCommand extends Command {
 
             }
 
-
         } catch (RefNotFoundException e) {
             throw new CommandException("Invalid password");
         }
-
 
     }
 }

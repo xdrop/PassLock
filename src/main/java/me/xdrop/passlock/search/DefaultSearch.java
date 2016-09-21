@@ -59,7 +59,6 @@ public class DefaultSearch implements FuzzySearcher {
 
         }
 
-
         for (ExtractedResult extractedResult : extractedResults){
 
             results.add(extractedResult.getString());

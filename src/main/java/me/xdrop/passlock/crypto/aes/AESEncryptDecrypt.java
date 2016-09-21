@@ -17,7 +17,6 @@ public class AESEncryptDecrypt {
 
     private static final String cipherType = "AES/CBC/PKCS5Padding";
 
-
     /**
      * Encrypts a given payload using the secret key provided.
      *
@@ -89,6 +88,5 @@ public class AESEncryptDecrypt {
         }
 
     }
-
 
 }

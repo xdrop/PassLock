@@ -10,7 +10,6 @@ public class PasswordEntry<T extends EncryptionData> {
     private String ref;
     private String id;
 
-
     public Date getDate() {
         return date;
     }

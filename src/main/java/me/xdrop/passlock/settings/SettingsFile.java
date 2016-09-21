@@ -87,5 +87,4 @@ public class SettingsFile extends DefaultSettings {
 
     }
 
-
 }

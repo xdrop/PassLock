@@ -40,5 +40,4 @@ public class ByteUtils {
         return new byte[] { 0x1, 0x1, 0x1, 0x1 };
     }
 
-
 }

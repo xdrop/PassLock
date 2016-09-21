@@ -35,7 +35,6 @@ public class RenameCommand extends Command {
             ref = name.get(0);
         }
 
-
         tio.write("Please enter your master password: ");
 
         char[] masterPassword = tio.getSecure();
@@ -62,8 +61,6 @@ public class RenameCommand extends Command {
             throw new CommandException("Source password could not be found.");
         }
 
-
     }
-
 
 }

@@ -1,6 +1,5 @@
 package me.xdrop.passlock.commands;
 
-
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.io.TextInputOutput;

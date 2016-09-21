@@ -34,7 +34,6 @@ public class AddCommand extends Command {
 
         String ref = name.get(0);
 
-
         tio.write("Please enter your master password: ");
 
         char[] masterPassword = tio.getSecure();
@@ -67,7 +66,6 @@ public class AddCommand extends Command {
             throw new CommandException("The reference you have selected is not unique.");
 
         }
-
 
     }
 

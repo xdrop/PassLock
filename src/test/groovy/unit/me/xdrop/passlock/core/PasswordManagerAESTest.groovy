@@ -60,7 +60,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         // inject mocks
         pwman.setEncryptionModel(encModel)
 
-
         def gotten = pwman.getPassword("test", nonMasterPass)
 
         assertNotNull gotten
@@ -93,11 +92,9 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def mypass = "mypass".toCharArray()
         def wrong = "wrongpass".toCharArray()
 
-
         def passman = partialMockBuilder(PasswordManagerAES)
                 .addMockedMethod("getPassword")
                 .createMock();
-
 
         expect(passman.getPassword("master", mypass))
             .andReturn(new byte[12])
@@ -106,7 +103,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         expect(passman.getPassword("master", wrong))
             .andThrow(new InvalidKeyException())
             .anyTimes()
-
 
         replay(passman)
 
@@ -131,7 +127,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
 
         def masterKey = passman.getMasterKey(mypass)
 
-
         assertNotNull masterKey
         assert masterKey == ByteUtils.getChars(storedKey)
 
@@ -150,7 +145,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
             .andVoid()
 
         replay(ds)
-
 
         def pwman = new PasswordManagerAES(ds)
 
@@ -187,7 +181,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def pwman = new PasswordManagerAES(ds)
         pwman.setEncryptionModel(em)
 
-
         pwman.updatePassword("def", input2, "newpass".toCharArray())
 
         assert captured.value.ref == "def"
@@ -204,7 +197,6 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
             .andVoid()
             .andStubThrow(new RefNotFoundException())
 
-
         replay(ds)
 
         def pwman = new PasswordManagerAES(ds)
@@ -218,6 +210,5 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         }
 
     }
-
 
 }

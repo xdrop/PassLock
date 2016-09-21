@@ -41,7 +41,6 @@ public class PassLock {
 
     }
 
-
     public static void main(String[] args) {
 
         PassLock passLock = new PassLock();
@@ -67,10 +66,8 @@ public class PassLock {
         TextInputOutput tio = new TextInputOutput();
         Settings settings = SettingsProvider.INSTANCE.getSettings();
 
-
         PasswordManager passwordManager =
                 new PasswordManagerAES(null);
-
 
         MainCommand cm = new MainCommand();
         JCommander jc = new JCommander(cm);
@@ -129,7 +126,6 @@ public class PassLock {
         GUtils.createIfDoesntExist(datasourcePath);
         passwordManager.setDatasource(new SQLiteAESDatasource(datasourcePath));
 
-
         if (!passwordManager.isInitialized()) {
 
             try {
@@ -153,7 +149,6 @@ public class PassLock {
 
             return;
         }
-
 
         try {
 

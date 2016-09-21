@@ -22,7 +22,6 @@ public class UpdateCommand extends Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
-
     @Override
     public void execute() throws CommandException {
 
@@ -31,7 +30,6 @@ public class UpdateCommand extends Command {
         }
 
         String ref = name.get(0);
-
 
         tio.write("Please enter your master password: ");
 
@@ -66,7 +64,6 @@ public class UpdateCommand extends Command {
         } catch (RefNotFoundException e) {
             throw new CommandException("Password doesn't exist");
         }
-
 
     }
 }

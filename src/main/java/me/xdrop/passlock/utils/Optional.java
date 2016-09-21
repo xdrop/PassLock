@@ -25,7 +25,6 @@ package me.xdrop.passlock.utils;
  * questions.
  */
 
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -140,8 +139,6 @@ public final class Optional<T> {
     public boolean isPresent() {
         return value != null;
     }
-
-
 
     /**
      * Indicates whether some other object is "equal to" this Optional. The

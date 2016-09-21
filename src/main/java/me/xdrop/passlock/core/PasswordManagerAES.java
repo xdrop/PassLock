@@ -3,7 +3,6 @@ package me.xdrop.passlock.core;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
 
-
 import me.xdrop.passlock.crypto.EncryptionModel;
 import me.xdrop.passlock.crypto.aes.AESEncryptionData;
 import me.xdrop.passlock.crypto.aes.AESEncryptionModel;
@@ -21,7 +20,6 @@ import java.util.List;
 public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, AESEncryptionData> {
 
     private final static Logger LOG = LoggerFactory.getLogger(PasswordManagerAES.class);
-
 
     private EncryptionModel<AESEncryptionData> encryptionModel;
 
@@ -162,7 +160,6 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
         datasource.delPass(reference);
 
     }
-
 
     /**
      * Initializes and <b>resets</b> the database. All data in it will be lost!

@@ -6,7 +6,6 @@ public class EncryptionData {
 
     private byte[] salt;
 
-
     public EncryptionData(byte[] encryptedPayload, byte[] salt) {
         this.encryptedPayload = encryptedPayload;
         this.salt = salt;

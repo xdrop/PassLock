@@ -55,7 +55,6 @@ public class GetCommand extends Command {
             ref = names.get(0);
         }
 
-
         try {
 
             List<String> searchResults = passwordManager.search(fuzzySearcher, ref, numberOfSuggestions);
@@ -129,7 +128,6 @@ public class GetCommand extends Command {
             throw new CommandException("Invalid master password");
 
         }
-
 
     }
 

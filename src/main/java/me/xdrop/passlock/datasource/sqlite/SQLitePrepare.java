@@ -16,7 +16,6 @@ public class SQLitePrepare {
      */
     public static void createPassTable(Connection sqLiteConnection) {
 
-
         String sql =
                 "CREATE TABLE IF NOT EXISTS passwords (id integer PRIMARY KEY ,\n" +
                 "ref TEXT UNIQUE NOT NULL, description TEXT, payload TEXT NOT NULL, salt TEXT NOT NULL,\n" +
@@ -55,6 +54,5 @@ public class SQLitePrepare {
         }
 
     }
-
 
 }

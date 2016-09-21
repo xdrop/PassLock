@@ -6,7 +6,6 @@ public class AESEncryptionData extends EncryptionData {
 
     private byte[] initilizationVector;
 
-
     public AESEncryptionData(byte[] encryptedPayload, byte[] salt, byte[] initializationVector) {
         super(encryptedPayload, salt);
         this.initilizationVector = initializationVector;
