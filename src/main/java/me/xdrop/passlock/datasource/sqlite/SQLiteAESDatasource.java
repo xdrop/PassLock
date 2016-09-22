@@ -4,8 +4,8 @@ import me.xdrop.passlock.crypto.aes.AESEncryptionData;
 import me.xdrop.passlock.datasource.Datasource;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.InvalidDataException;
-import me.xdrop.passlock.exceptions.NotInitalizedException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.model.BufferedProcessor;
 import me.xdrop.passlock.model.PasswordEntry;
 import me.xdrop.passlock.utils.ByteUtils;
 import org.slf4j.Logger;
@@ -110,6 +110,124 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         }
 
         return null;
+    }
+
+    @Override
+    public int getSize() {
+
+        String sql = "SELECT COUNT(*) FROM passwords";
+
+        try {
+
+            Statement statement = con.createStatement();
+
+            statement.execute(sql);
+
+            ResultSet rs = statement.getResultSet();
+
+            if (rs.next()) {
+
+                /* return the count */
+                return rs.getInt(1);
+            }
+
+
+        } catch (SQLException e) {
+
+            LOG.info("Failed to get size", e);
+
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int bufferedUpdate(BufferedProcessor<PasswordEntry<AESEncryptionData>> bufferedProcessor) throws Exception {
+
+        int bufferSize = bufferedProcessor.getBufferSize();
+        int pages = (int) Math.ceil((double) getSize() / bufferSize);
+        int recordsProcessed = 0;
+
+        for (int offset = 1; offset <= pages; offset++) {
+
+            List<PasswordEntry<AESEncryptionData>> batch;
+            List<PasswordEntry<AESEncryptionData>> processed;
+
+            batch = batchSelect(bufferSize, offset);
+
+            if(batch == null)
+                return 0;
+
+            recordsProcessed += batch.size();
+            bufferedProcessor.receive(batch);
+
+            try {
+
+                processed = bufferedProcessor.process();
+
+            } catch (Exception e) {
+                LOG.debug("Buffered update error", e);
+                throw new Exception();
+            }
+
+            bufferedProcessor.send(processed);
+
+        }
+
+        return recordsProcessed;
+    }
+
+    private List<PasswordEntry<AESEncryptionData>> batchSelect(int batchSize, int offset) {
+
+        String sql = "SELECT * FROM passwords LIMIT ? OFFSET ?";
+
+        try{
+
+            PreparedStatement statement = con.prepareStatement(sql);
+
+            /* limit the number of rows returned according to the
+             * buffer size */
+            statement.setInt(1, batchSize);
+
+            /* offset's the batch select by BatchSize * (Offset - 1) */
+            statement.setInt(2, batchSize * (offset - 1));
+
+            statement.execute();
+
+            ResultSet rs = statement.getResultSet();
+
+            List<PasswordEntry<AESEncryptionData>> batch = new ArrayList<>();
+
+            while (rs.next()) {
+
+                PasswordEntry<AESEncryptionData> passwordEntry = new PasswordEntry<>();
+                AESEncryptionData encryptionData = new AESEncryptionData();
+
+                /* TODO: Add rest of fields eg. date */
+                passwordEntry.setId(rs.getString("id"));
+                passwordEntry.setDescription(rs.getString("description"));
+                passwordEntry.setRef(rs.getString("ref"));
+
+                encryptionData.setInitilizationVector(ByteUtils.fromBase64(rs.getString("iv")));
+                encryptionData.setSalt(ByteUtils.fromBase64(rs.getString("salt")));
+                encryptionData.setEncryptedPayload(ByteUtils.fromBase64(rs.getString("payload")));
+
+                passwordEntry.setEncryptionData(encryptionData);
+
+                batch.add(passwordEntry);
+
+            }
+
+            return batch;
+
+        } catch (SQLException e) {
+
+            LOG.info("Failed to batch select", e);
+
+        }
+
+        return null;
+
     }
 
     public void delPass(String ref) throws RefNotFoundException {
