@@ -118,7 +118,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
         def newC = "newmaster".toCharArray()
 
-        pwman.updateMasterPassword(masterPassC, newC)
+        pwman.updateMasterPassword(pwman.getMasterKey(masterPassC), newC)
 
         assert pwman.getPassword("ab", pwman.getMasterKey(newC)) == sampleStoredBytes
 

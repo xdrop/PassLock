@@ -139,6 +139,20 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     @Override
     public void updatePassword(String reference, char[] masterKey, char[] newPassword) throws RefNotFoundException {
 
+        if(reference.equalsIgnoreCase("master")) {
+
+            LOG.debug("Updating master password");
+
+            try {
+                updateMasterPassword(masterKey, newPassword);
+            } catch (InvalidKeyException e) {
+                LOG.error("Master key was invalid", e);
+            }
+
+            return;
+        }
+
+
         LOG.debug("Updating password for " + reference);
 
         AESEncryptionData encryptionData = encryptionModel.encrypt(ByteUtils.getBytes(newPassword), masterKey);
@@ -167,16 +181,9 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
     }
 
-    public void updateMasterPassword(char[] oldMasterPassword, char[] newMasterPassword) throws InvalidKeyException {
-
-
-        if (!unlocksMaster(oldMasterPassword)) throw new InvalidKeyException();
-
+    public void updateMasterPassword(char[] oldMasterKey, char[] newMasterPassword) throws InvalidKeyException {
 
         LOG.info("Generating AES secret...");
-
-        /* Remember the old master key */
-        char[] oldKey = getMasterKey(oldMasterPassword);
 
         /* Store the master key */
         SecretKey secretKey = encryptionModel.generateSecret(newMasterPassword);
@@ -188,7 +195,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
             addPassword("The master key", secretKey.getEncoded(), newMasterPassword, "master");
 
             LOG.info("Re-encrypting entries...");
-            updateMasterKey(oldKey, ByteUtils.getChars(secretKey.getEncoded()));
+            updateMasterKey(oldMasterKey, ByteUtils.getChars(secretKey.getEncoded()));
 
         } catch (AlreadyExistsException | RefNotFoundException ignored) { /* can't happen */ }
 
@@ -227,6 +234,7 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
                     try {
                         oldPayload = encryptionModel.decrypt(entry.getEncryptionData(), oldMasterKey);
                     } catch (InvalidKeyException e) {
+                        /* not all passwords were encoded with the same key, so just skip.. */
                         continue;
                     }
 
