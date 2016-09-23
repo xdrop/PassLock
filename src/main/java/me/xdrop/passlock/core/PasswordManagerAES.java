@@ -7,6 +7,7 @@ import me.xdrop.passlock.crypto.EncryptionModel;
 import me.xdrop.passlock.crypto.aes.AESEncryptionData;
 import me.xdrop.passlock.crypto.aes.AESEncryptionModel;
 import me.xdrop.passlock.datasource.Datasource;
+import me.xdrop.passlock.model.BufferedProcessor;
 import me.xdrop.passlock.model.PasswordEntry;
 import me.xdrop.passlock.search.FuzzySearcher;
 import me.xdrop.passlock.utils.ByteUtils;
@@ -158,6 +159,47 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     public void deletePassword(String reference) throws RefNotFoundException {
 
         datasource.delPass(reference);
+
+    }
+
+    public void updateMasterPassword(char[] oldMaster, char[] newMaster) {
+
+        BufferedProcessor<PasswordEntry<AESEncryptionData>> updateTask;
+
+        updateTask = new BufferedProcessor<PasswordEntry<AESEncryptionData>>() {
+
+            @Override
+            public void setBufferSize(int size) {
+
+            }
+
+            @Override
+            public int getBufferSize() {
+                return 0;
+            }
+
+            @Override
+            public void receive(List<? extends PasswordEntry<AESEncryptionData>> in) {
+
+            }
+
+            @Override
+            public List<PasswordEntry<AESEncryptionData>> process() throws Exception {
+                return null;
+            }
+
+            @Override
+            public void send(List<? extends PasswordEntry<AESEncryptionData>> out) {
+
+            }
+
+        };
+
+        try {
+            datasource.bufferedUpdate(updateTask);
+        } catch (Exception e) {
+
+        }
 
     }
 

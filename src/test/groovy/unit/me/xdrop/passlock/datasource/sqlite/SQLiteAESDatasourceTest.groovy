@@ -103,6 +103,19 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
 
     }
 
+    void testGetSize() {
+
+        def total = 13;
+
+        for (int i = 0; i < total; i++){
+            datasource.addPass(i.toString(),
+                    dummyPasswordEntry(i.toString(), ""));
+        }
+
+        assert datasource.getSize() == (total + 1)
+
+    }
+
     void testBufferedUpdate() {
 
         def batch = 500;

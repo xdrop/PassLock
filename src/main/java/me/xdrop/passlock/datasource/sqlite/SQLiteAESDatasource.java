@@ -115,27 +115,30 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
     @Override
     public int getSize() {
 
-        String sql = "SELECT COUNT(*) FROM passwords";
+        String sql = "SELECT COUNT(*),'test' FROM passwords";
+        ResultSet rs;
+        PreparedStatement statement;
 
         try {
 
-            Statement statement = con.createStatement();
-
-            statement.execute(sql);
-
-            ResultSet rs = statement.getResultSet();
+            statement = con.prepareStatement(sql);
+            statement.execute();
+            rs = statement.getResultSet();
+            int result= 0;
 
             if (rs.next()) {
 
                 /* return the count */
-                return rs.getInt(1);
+                result = rs.getInt(1);
             }
 
+            rs.close();
+            statement.close();
+
+            return result;
 
         } catch (SQLException e) {
-
             LOG.info("Failed to get size", e);
-
         }
 
         return 0;
@@ -218,12 +221,12 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
             }
 
+            statement.close();
+
             return batch;
 
         } catch (SQLException e) {
-
             LOG.info("Failed to batch select", e);
-
         }
 
         return null;
@@ -248,9 +251,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             }
 
         } catch (SQLException e) {
-
             LOG.info("Failed to delete", e);
-
         }
 
     }
@@ -277,9 +278,7 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             }
 
         } catch (SQLException e) {
-
             LOG.info("Failed to update", e);
-
         }
 
     }
