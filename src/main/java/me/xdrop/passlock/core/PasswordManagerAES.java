@@ -116,6 +116,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
     @Override
     public void rename(String reference, String newReference) throws RefNotFoundException {
 
+        if(reference.equalsIgnoreCase("master")) throw new RefNotFoundException();
+
         LOG.debug("Renaming " + reference + " to " + newReference + "...");
         PasswordEntry<AESEncryptionData> passwordEntry = datasource.getPass(reference);
 
@@ -157,6 +159,8 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
      */
     @Override
     public void deletePassword(String reference) throws RefNotFoundException {
+
+        if(reference.equalsIgnoreCase("master")) throw new RefNotFoundException();
 
         datasource.delPass(reference);
 
