@@ -15,6 +15,9 @@ public class DeleteCommand extends Command {
     @Parameter(description = "Reference to delete")
     private List<String> name;
 
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
     public DeleteCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
@@ -32,9 +35,14 @@ public class DeleteCommand extends Command {
 
         String ref = name.get(0);
 
-        tio.write("Please enter your master password: ");
+        char[] masterPassword;
 
-        char[] masterPassword = tio.getSecure();
+        if(masterPass == null) {
+            tio.write("Please enter your master password: ");
+            masterPassword = tio.getSecure();
+        } else{
+            masterPassword = masterPass.toCharArray();
+        }
 
         try {
 

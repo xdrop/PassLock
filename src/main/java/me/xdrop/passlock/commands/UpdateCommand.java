@@ -19,6 +19,9 @@ public class UpdateCommand extends Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
     public UpdateCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
@@ -36,9 +39,15 @@ public class UpdateCommand extends Command {
 
         String ref = name.get(0);
 
-        tio.write("Please enter your master password: ");
+        char[] masterPassword;
 
-        char[] masterPassword = tio.getSecure();
+        if(masterPass == null) {
+            tio.write("Please enter your master password: ");
+            masterPassword = tio.getSecure();
+        } else{
+            masterPassword = masterPass.toCharArray();
+        }
+
         char[] masterKey;
         char[] newPassC;
 

@@ -16,6 +16,9 @@ public class RenameCommand extends Command {
     @Parameter(description = "Reference to rename")
     private List<String> name;
 
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
     public RenameCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
@@ -40,9 +43,14 @@ public class RenameCommand extends Command {
             ref = name.get(0);
         }
 
-        tio.write("Please enter your master password: ");
+        char[] masterPassword;
 
-        char[] masterPassword = tio.getSecure();
+        if(masterPass == null) {
+            tio.write("Please enter your master password: ");
+            masterPassword = tio.getSecure();
+        } else{
+            masterPassword = masterPass.toCharArray();
+        }
 
         try{
 

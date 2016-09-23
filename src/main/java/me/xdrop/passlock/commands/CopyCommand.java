@@ -17,6 +17,9 @@ public class CopyCommand extends Command {
     @Parameter(description = "from to or simply from")
     private List<String> name;
 
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
     public CopyCommand(PasswordManager passwordManager, TextInputOutput tio) {
         super(passwordManager, tio);
     }
@@ -41,9 +44,14 @@ public class CopyCommand extends Command {
             ref = name.get(0);
         }
 
-        tio.write("Please enter your master password: ");
+        char[] masterPassword;
 
-        char[] masterPassword = tio.getSecure();
+        if(masterPass == null) {
+            tio.write("Please enter your master password: ");
+            masterPassword = tio.getSecure();
+        } else{
+            masterPassword = masterPass.toCharArray();
+        }
 
         try{
 

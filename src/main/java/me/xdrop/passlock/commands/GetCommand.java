@@ -27,6 +27,9 @@ public class GetCommand extends Command {
     @Parameter(description = "Reference to the entry")
     private List<String> names;
 
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
     public GetCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
@@ -114,10 +117,17 @@ public class GetCommand extends Command {
                 ref = searchResults.get(0);
             }
             tio.writeln("Showing password for [" + ref + "]");
-            tio.writeln("Enter your master pass");
 
-            char[] master = tio.getSecure();
-            char[] masterKey = passwordManager.getMasterKey(master);
+            char[] masterPassword;
+
+            if(masterPass == null) {
+                tio.write("Please enter your master password: ");
+                masterPassword = tio.getSecure();
+            } else{
+                masterPassword = masterPass.toCharArray();
+            }
+
+            char[] masterKey = passwordManager.getMasterKey(masterPassword);
             byte[] pass = passwordManager.getPassword(ref, masterKey);
 
             tio.writeln("Your password is:");
