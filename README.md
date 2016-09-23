@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/xdrop/PassLock.svg?branch=master)](https://travis-ci.org/xdrop/passlock)
 [![GitHub release](https://img.shields.io/github/release/xdrop/passlock.svg)](https://github.com/xdrop/PassLock/releases)
 
-[![Screen capture](http://xdrop.me/img/passlock-terminal.png)](https://github.com/xdrop/passlock)
+[![Screen capture](http://xdrop.me/img/passlock-cmd.png)](https://github.com/xdrop/passlock)
 
 ## Features
 
