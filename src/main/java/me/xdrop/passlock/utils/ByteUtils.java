@@ -21,9 +21,12 @@ public class ByteUtils {
     }
 
     public static char[] getChars(byte[] bytes){
-        char[] chars = new char[bytes.length/2];
-        for(int i=0;i<chars.length;i++)
-            chars[i] = (char) ((bytes[i*2] << 8) + (bytes[i*2+1] & 0xFF));
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        CharBuffer charBuffer = Charset.forName("UTF-8").decode(byteBuffer);
+        char[] chars = Arrays.copyOfRange(charBuffer.array(),
+                charBuffer.position(), charBuffer.limit());
+        Arrays.fill(charBuffer.array(), '\u0000');
+        Arrays.fill(byteBuffer.array(), (byte) 0);
         return chars;
     }
 
