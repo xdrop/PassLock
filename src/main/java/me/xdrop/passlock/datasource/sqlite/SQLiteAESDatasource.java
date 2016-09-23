@@ -41,13 +41,11 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
             PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setString(1, ref);
-            statement.execute();
 
-            ResultSet rs = statement.getResultSet();
+            ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
 
-                /* TODO: Add rest of fields eg. date */
                 passwordEntry.setId(rs.getString("id"));
                 passwordEntry.setDescription(rs.getString("description"));
                 passwordEntry.setRef(rs.getString("ref"));
@@ -59,6 +57,8 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
                 passwordEntry.setEncryptionData(encryptionData);
 
                 assert (passwordEntry.getRef().equals(ref));
+
+                rs.close();
                 statement.close();
 
                 return passwordEntry;
@@ -362,12 +362,19 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
     @Override
     public boolean isCreated() {
 
-        // for now, we are lazy
+        Statement statement = null;
 
+        // for now, we are lazy
         try {
-            con.createStatement().execute("SELECT * FROM passwords");
+            statement = con.createStatement();
+            statement.execute("SELECT * FROM passwords");
+            statement.close();
         }  catch (SQLException e) {
             return false;
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException ignored) {}
         }
 
         return true;

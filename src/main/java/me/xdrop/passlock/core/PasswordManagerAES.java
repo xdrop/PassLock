@@ -280,7 +280,6 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
         /* Initialize the datasource */
         datasource.reset();
-        datasource.initialize();
 
         LOG.info("Generating AES secret...");
 
@@ -305,12 +304,12 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
             if (!datasource.isCreated()){
                 return false;
             }
+            return true;
 
         } catch (RefNotFoundException e) {
             return false;
         }
 
-        return true;
     }
 
     /**

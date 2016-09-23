@@ -17,7 +17,7 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
      * Stores and encrypts the given password, using an encryption algorithm
      *
      * @param description Description of what this password is for
-     * @param newPassword The password to store in a *char* array
+     * @param newPassword The password to store in a {@code char} array
      * @param masterPass  The master password
      * @param reference   A unique reference identifier for this entry
      * @throws AlreadyExistsException Thrown if the target reference already
@@ -26,13 +26,12 @@ public interface PasswordManager<T extends EncryptionModel<E>, E extends Encrypt
     void addPassword(String description, char[] newPassword, char[] masterPass, String reference)
             throws AlreadyExistsException;
 
-    ;
 
     /**
      * Stores and encrypts the given password, using an encryption algorithm
      *
      * @param description Description of what this password is for
-     * @param newPassword The password to store in *bytes*
+     * @param newPassword The password to store in a {@code byte} array
      * @param masterPass  The master password
      * @param reference   A unique reference identifier for this entry
      * @throws AlreadyExistsException Thrown if the target reference already

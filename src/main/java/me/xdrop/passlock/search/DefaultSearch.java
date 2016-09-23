@@ -81,5 +81,6 @@ public class DefaultSearch implements FuzzySearcher {
         } else {
             return Optional.empty();
         }
+
     }
 }
