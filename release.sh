@@ -6,6 +6,7 @@ cat src/main/java/me/xdrop/passlock/commands/HelpCommand.java | sed "s/PassLock 
 mvn versions:set -DnewVersion=$1
 sh package.sh
 mv passlock.zip passlock-$1.zip
+git checkout dev
 git add -u
 git commit -m "[release] $1"
 git tag $1
