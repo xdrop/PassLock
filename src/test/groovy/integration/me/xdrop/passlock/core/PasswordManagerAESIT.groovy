@@ -4,13 +4,15 @@ import me.xdrop.passlock.LogGroovyTestCase
 import me.xdrop.passlock.datasource.sqlite.SQLiteAESDatasource
 import me.xdrop.passlock.exceptions.RefNotFoundException
 import me.xdrop.passlock.search.DefaultSearch
+import me.xdrop.passlock.utils.ByteUtils
 
 import java.security.InvalidKeyException
 
 class PasswordManagerAESIT extends LogGroovyTestCase {
 
-    def pwman = new PasswordManagerAES(new SQLiteAESDatasource());
+    def pwman = new PasswordManagerAES(new SQLiteAESDatasource("store.db"));
     def masterPass = "mymaster";
+    def masterPassC = "mymaster".toCharArray();
     def encryptionPayload = "encryptme"
 
     void setUp() {
@@ -19,6 +21,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         pwman.initializeDatasource(masterPass.toCharArray())
 
         pwman.addPassword("Description", encryptionPayload.getBytes("UTF-8"), "nonaesmaster".toCharArray(), "def")
+        pwman.addPassword("Description", encryptionPayload.getBytes("UTF-8"), pwman.getMasterKey(masterPassC), "real")
 
     }
 
@@ -41,10 +44,13 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
     void testGetPassword() {
 
-        def gotten = pwman.getPassword("def", "nonaesmaster".toCharArray())
+        def gotten  = pwman.getPassword("def", "nonaesmaster".toCharArray())
+        def gotten2 = pwman.getPassword("real", pwman.getMasterKey(masterPassC))
 
         assertNotNull gotten
-        assert gotten == encryptionPayload.getBytes("UTF-8")
+        assertNotNull gotten2
+        assert gotten  == encryptionPayload.getBytes("UTF-8")
+        assert gotten2 == encryptionPayload.getBytes("UTF-8")
 
         shouldFail(InvalidKeyException){
             pwman.getPassword("def", "asda".toCharArray())
@@ -85,6 +91,10 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
         assert "encryptme".getBytes("UTF-8") == pwman.getPassword("new", "nonaesmaster".toCharArray())
 
+        shouldFail(RefNotFoundException) {
+            pwman.rename("master","anything")
+        }
+
     }
 
     void testUpdate() {
@@ -95,6 +105,25 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
     }
 
+    void testUpdateMaster() {
+
+        def sampleStored = ByteUtils.getBytes(ByteUtils.getChars("hα".getBytes("UTF-8")))
+        def sampleStoredBytes = "hα".getBytes("UTF-8")
+
+        assert pwman.unlocksMaster(masterPassC)
+
+        pwman.addPassword("", sampleStored, pwman.getMasterKey(masterPassC),"ab")
+        pwman.addPassword("", sampleStored, pwman.getMasterKey(masterPassC),"cd")
+        pwman.addPassword("", sampleStored, pwman.getMasterKey(masterPassC),"ef")
+
+        def newC = "newmaster".toCharArray()
+
+        pwman.updateMasterPassword(pwman.getMasterKey(masterPassC), newC)
+
+        assert pwman.getPassword("ab", pwman.getMasterKey(newC)) == sampleStoredBytes
+
+    }
+
     void testDelete() {
 
         pwman.deletePassword("def")
@@ -102,6 +131,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         shouldFail(RefNotFoundException) {
 
             pwman.getPassword("def")
+            pwman.deletePassword("master")
 
         }
 

@@ -120,6 +120,9 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def mypass = "mypassword".toCharArray()
         def storedKey = "masterpass".getBytes("UTF-8")
 
+        /* The original is wiped in getChars conversion */
+        def storedKeyOrig = "masterpass".getBytes("UTF-8")
+
         expect(passman.getPassword("master", mypass))
                 .andReturn(storedKey)
 
@@ -128,7 +131,7 @@ class PasswordManagerAESTest extends LogGroovyTestCase {
         def masterKey = passman.getMasterKey(mypass)
 
         assertNotNull masterKey
-        assert masterKey == ByteUtils.getChars(storedKey)
+        assert masterKey == ByteUtils.getChars(storedKeyOrig)
 
     }
 

@@ -38,4 +38,7 @@ public abstract class DefaultSettings implements Settings {
     public int getCertainMatchThreshold(){
         return 94;
     }
+
+    @Override
+    public boolean isSecureInput() { return true; }
 }

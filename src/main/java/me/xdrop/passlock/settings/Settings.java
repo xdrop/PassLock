@@ -15,4 +15,6 @@ public interface Settings {
     String configFilePath();
 
     int getCertainMatchThreshold();
+
+    boolean isSecureInput();
 }

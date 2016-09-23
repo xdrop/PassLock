@@ -2,6 +2,7 @@ package me.xdrop.passlock.commands;
 
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 public class HelpCommand extends Command {
 
@@ -9,9 +10,13 @@ public class HelpCommand extends Command {
         super(passwordManager);
     }
 
+    public HelpCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
+
     @Override
     public void execute() throws CommandException {
-        tio.writeln("PassLock 1.0.20-beta");
+        tio.writeln("PassLock 1.1.0-beta");
         tio.writeln("Copyright (C) 2015 Free Software Foundation, Inc.");
         tio.writeln("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>");
         tio.writeln("This is free software: you are free to change and redistribute it.");

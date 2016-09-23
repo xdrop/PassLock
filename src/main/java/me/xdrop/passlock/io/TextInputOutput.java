@@ -13,6 +13,7 @@ public class TextInputOutput {
     private PrintWriter pw;
     private Scanner scanner;
     private OutputStream out;
+    private boolean secure = true;
 
     public TextInputOutput(InputStream in, OutputStream out) {
 
@@ -55,7 +56,7 @@ public class TextInputOutput {
 
     public char[] getSecure() {
 
-        if (console != null)
+        if (console != null && secure)
             return console.readPassword();
         else
             return scanner.nextLine().toCharArray();
@@ -66,6 +67,18 @@ public class TextInputOutput {
 
         return scanner.nextLine();
 
+    }
+
+    public void disableSecure(){
+        this.secure = false;
+    }
+
+    public boolean isSecure() {
+        return secure;
+    }
+
+    public void setSecure(boolean secure) {
+        this.secure = secure;
     }
 
 }

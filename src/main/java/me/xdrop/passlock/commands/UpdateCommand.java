@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameters;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.security.InvalidKeyException;
 import java.util.List;
@@ -12,15 +13,22 @@ import java.util.List;
 @Parameters(commandDescription = "Updates a password")
 public class UpdateCommand extends Command {
 
-    public UpdateCommand(PasswordManager passwordManager) {
-        super(passwordManager);
-    }
-
     @Parameter(names = {"--pass", "-p"})
     private String newPassword;
 
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
+
+    @Parameter(names = {"-m"})
+    private String masterPass;
+
+    public UpdateCommand(PasswordManager passwordManager) {
+        super(passwordManager);
+    }
+
+    public UpdateCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
 
     @Override
     public void execute() throws CommandException {
@@ -31,9 +39,15 @@ public class UpdateCommand extends Command {
 
         String ref = name.get(0);
 
-        tio.write("Please enter your master password: ");
+        char[] masterPassword;
 
-        char[] masterPassword = tio.getSecure();
+        if(masterPass == null) {
+            tio.write("Please enter your master password: ");
+            masterPassword = tio.getSecure();
+        } else{
+            masterPassword = masterPass.toCharArray();
+        }
+
         char[] masterKey;
         char[] newPassC;
 

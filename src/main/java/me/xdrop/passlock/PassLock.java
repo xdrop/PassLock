@@ -63,43 +63,19 @@ public class PassLock {
         PropertyConfigurator.configure(loadResourceProperties("log.properties"));
         String datasourcePath;
 
-        TextInputOutput tio = new TextInputOutput();
         Settings settings = SettingsProvider.INSTANCE.getSettings();
 
-        PasswordManager passwordManager =
-                new PasswordManagerAES(null);
+        PasswordManager passwordManager = new PasswordManagerAES(null);
+
+        TextInputOutput tio = new TextInputOutput();
+        tio.setSecure(settings.isSecureInput());
 
         MainCommand cm = new MainCommand();
         JCommander jc = new JCommander(cm);
 
         Map<String, Command> commands = new HashMap<>();
 
-        AddCommand addCommand = new AddCommand(passwordManager);
-        registerCommand(jc, addCommand, commands, "add", "a");
-
-        DeleteCommand deleteCommand = new DeleteCommand(passwordManager);
-        registerCommand(jc, deleteCommand, commands, "delete", "rm", "d");
-
-        UpdateCommand updateCommand = new UpdateCommand(passwordManager);
-        registerCommand(jc, updateCommand, commands, "update", "u");
-
-        GetCommand getCommand = new GetCommand(passwordManager);
-        registerCommand(jc, getCommand, commands, "get", "g");
-
-        ResetCommand resetCommand = new ResetCommand(passwordManager);
-        registerCommand(jc, resetCommand, commands, "reset", "rst");
-
-        ListCommand listCommand = new ListCommand(passwordManager);
-        registerCommand(jc, listCommand, commands, "list", "l", "ls");
-
-        RenameCommand renameCommand = new RenameCommand(passwordManager);
-        registerCommand(jc, renameCommand, commands, "rename", "mv", "r");
-
-        CopyCommand copyCommand = new CopyCommand(passwordManager);
-        registerCommand(jc, copyCommand, commands, "copy", "cp", "c");
-
-        HelpCommand helpCommand = new HelpCommand(passwordManager);
-        registerCommand(jc, helpCommand, commands, "--help", "-h");
+        bindCommands(tio, passwordManager, jc, commands);
 
         String command;
 
@@ -123,14 +99,19 @@ public class PassLock {
             datasourcePath = GUtils.resolvePath(settings.getDbPath());
         }
 
+        if (cm.isSecureInput() != null){
+            tio.setSecure(cm.isSecureInput());
+        }
+
         GUtils.createIfDoesntExist(datasourcePath);
         passwordManager.setDatasource(new SQLiteAESDatasource(datasourcePath));
 
+        /* if the datasource isn't prepared, prepare it before doing anything else */
         if (!passwordManager.isInitialized()) {
 
             try {
                 tio.writeln("This is your first time running, initializing database");
-                new ResetCommand(passwordManager).execute();
+                new ResetCommand(passwordManager, tio).execute();
 
                 if (command != null && commands.get(command) instanceof ResetCommand) {
                     return;
@@ -144,7 +125,7 @@ public class PassLock {
             tio.writeln("Invalid command, exiting.");
 
             try {
-                helpCommand.execute();
+                new HelpCommand(null).execute();
             } catch (CommandException ignored) {}
 
             return;
@@ -162,6 +143,37 @@ public class PassLock {
         } catch (CommandException ce) {
             tio.writeln(ce.getMessage());
         }
+
+    }
+
+    private void bindCommands(TextInputOutput tio, PasswordManager passwordManager, JCommander jc, Map<String, Command> commands) {
+
+        AddCommand addCommand = new AddCommand(passwordManager, tio);
+        registerCommand(jc, addCommand, commands, "add", "a");
+
+        DeleteCommand deleteCommand = new DeleteCommand(passwordManager, tio);
+        registerCommand(jc, deleteCommand, commands, "delete", "rm", "d");
+
+        UpdateCommand updateCommand = new UpdateCommand(passwordManager, tio);
+        registerCommand(jc, updateCommand, commands, "update", "u");
+
+        GetCommand getCommand = new GetCommand(passwordManager, tio);
+        registerCommand(jc, getCommand, commands, "get", "g");
+
+        ResetCommand resetCommand = new ResetCommand(passwordManager, tio);
+        registerCommand(jc, resetCommand, commands, "reset", "rst");
+
+        ListCommand listCommand = new ListCommand(passwordManager, tio);
+        registerCommand(jc, listCommand, commands, "list", "l", "ls");
+
+        RenameCommand renameCommand = new RenameCommand(passwordManager, tio);
+        registerCommand(jc, renameCommand, commands, "rename", "mv", "r");
+
+        CopyCommand copyCommand = new CopyCommand(passwordManager, tio);
+        registerCommand(jc, copyCommand, commands, "copy", "cp", "c");
+
+        HelpCommand helpCommand = new HelpCommand(passwordManager, tio);
+        registerCommand(jc, helpCommand, commands, "--help", "-h");
 
     }
 

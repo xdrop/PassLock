@@ -2,7 +2,7 @@ package me.xdrop.passlock.model;
 
 import java.util.Date;
 
-public class PasswordEntry<T extends EncryptionData> {
+public class PasswordEntry<T extends EncryptionData> implements Cloneable {
 
     private T encryptionData;
     private Date date;
@@ -48,5 +48,17 @@ public class PasswordEntry<T extends EncryptionData> {
 
     public void setEncryptionData(T encryptionData) {
         this.encryptionData = encryptionData;
+    }
+
+    @Override
+    public PasswordEntry<T> clone() throws CloneNotSupportedException {
+
+        PasswordEntry<T> clone = new PasswordEntry<>();
+        clone.setRef(this.getRef());
+        clone.setDescription(this.getDescription());
+        clone.setEncryptionData((T) this.getEncryptionData().clone());
+
+        return clone;
+
     }
 }

@@ -53,6 +53,11 @@ public class SettingsFile extends DefaultSettings {
 
     }
 
+    @Override
+    public boolean isSecureInput() {
+        return getOrDefaultBool("secure_input", super.isSecureInput());
+    }
+
     private String getOrDefault(String property, String defaultResult) {
 
         if (config != null) {
@@ -79,6 +84,24 @@ public class SettingsFile extends DefaultSettings {
                 try {
                     return Integer.parseInt(value);
                 } catch (NumberFormatException ignored) {}
+            }
+
+        }
+
+        return defaultResult;
+
+    }
+
+    private boolean getOrDefaultBool(String property, boolean defaultResult){
+
+        if(config != null) {
+
+            String value = config.getProperty(property);
+
+            if (value != null) {
+                try {
+                    return Boolean.valueOf(value);
+                } catch (Exception ignored) {}
             }
 
         }

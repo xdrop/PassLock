@@ -22,4 +22,26 @@ public class AESEncryptionData extends EncryptionData {
     public void setInitilizationVector(byte[] initilizationVector) {
         this.initilizationVector = initilizationVector;
     }
+
+    public AESEncryptionData from(EncryptionData encData) {
+
+        AESEncryptionData aesEncryptionData = new AESEncryptionData();
+
+        aesEncryptionData.setSalt(encData.getSalt());
+        aesEncryptionData.setEncryptedPayload(encData.getEncryptedPayload());
+
+        return aesEncryptionData;
+
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        AESEncryptionData clone = from((EncryptionData) super.clone());
+
+        clone.setInitilizationVector(this.getInitilizationVector());
+
+        return clone;
+
+    }
 }
