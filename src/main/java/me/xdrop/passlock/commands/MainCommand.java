@@ -23,6 +23,6 @@ public class MainCommand {
     }
 
     public Boolean isSecureInput() {
-        return secureInput;
+        return !secureInput;
     }
 }
