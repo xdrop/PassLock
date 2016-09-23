@@ -31,7 +31,7 @@ public class SQLitePrepare {
      */
     public static void resetTable(Connection sqLiteConnection) {
 
-        String sql = "DROP TABLE passwords";
+        String sql = "DROP TABLE IF EXISTS passwords";
 
         performSingleTransaction(sqLiteConnection, sql);
 
