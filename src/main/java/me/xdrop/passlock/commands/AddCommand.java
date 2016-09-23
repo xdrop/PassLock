@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameters;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.CommandException;
+import me.xdrop.passlock.io.TextInputOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,10 @@ public class AddCommand extends Command {
 
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
+
+    public AddCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
 
     public AddCommand(PasswordManager passwordManager) {
         super(passwordManager);

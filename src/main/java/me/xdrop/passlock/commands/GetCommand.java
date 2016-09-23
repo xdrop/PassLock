@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameters;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.io.TextInputOutput;
 import me.xdrop.passlock.search.DefaultSearch;
 
 import me.xdrop.passlock.search.FuzzySearcher;
@@ -28,6 +29,10 @@ public class GetCommand extends Command {
 
     public GetCommand(PasswordManager passwordManager) {
         super(passwordManager);
+    }
+
+    public GetCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
     }
 
     public void execute() throws CommandException {

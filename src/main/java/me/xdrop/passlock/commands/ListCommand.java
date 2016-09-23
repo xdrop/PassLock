@@ -2,6 +2,7 @@ package me.xdrop.passlock.commands;
 
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.util.List;
 
@@ -9,6 +10,10 @@ public class ListCommand extends Command {
 
     public ListCommand(PasswordManager passwordManager) {
         super(passwordManager);
+    }
+
+    public ListCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
     }
 
     @Override

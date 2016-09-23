@@ -3,6 +3,7 @@ package me.xdrop.passlock.commands;
 import com.beust.jcommander.Parameters;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.util.Arrays;
 
@@ -11,6 +12,10 @@ public class ResetCommand extends Command {
 
     public ResetCommand(PasswordManager passwordManager) {
         super(passwordManager);
+    }
+
+    public ResetCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
     }
 
     @Override

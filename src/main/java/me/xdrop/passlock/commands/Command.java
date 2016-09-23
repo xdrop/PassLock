@@ -14,6 +14,11 @@ public abstract class Command {
         this.tio = new TextInputOutput();
     }
 
+    public Command(PasswordManager passwordManager, TextInputOutput tio) {
+        this.passwordManager = passwordManager;
+        this.tio = tio;
+    }
+
     public abstract void execute() throws CommandException;
 
 }

@@ -2,11 +2,16 @@ package me.xdrop.passlock.commands;
 
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 public class HelpCommand extends Command {
 
     public HelpCommand(PasswordManager passwordManager) {
         super(passwordManager);
+    }
+
+    public HelpCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
     }
 
     @Override

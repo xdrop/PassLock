@@ -5,18 +5,23 @@ import com.beust.jcommander.Parameters;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.util.List;
 
 @Parameters(commandDescription = "Deletes a password")
 public class DeleteCommand extends Command {
 
+    @Parameter(description = "Reference to delete")
+    private List<String> name;
+
     public DeleteCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
 
-    @Parameter(description = "Reference to delete")
-    private List<String> name;
+    public DeleteCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
 
     @Override
     public void execute() throws CommandException {

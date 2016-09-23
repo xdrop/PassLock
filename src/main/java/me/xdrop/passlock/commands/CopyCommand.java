@@ -5,20 +5,25 @@ import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.AlreadyExistsException;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.util.List;
 
 public class CopyCommand extends Command {
-
-    public CopyCommand(PasswordManager passwordManager) {
-        super(passwordManager);
-    }
 
     @Parameter(names = {"--target", "-t"})
     private String targetName;
 
     @Parameter(description = "from to or simply from")
     private List<String> name;
+
+    public CopyCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
+
+    public CopyCommand(PasswordManager passwordManager) {
+        super(passwordManager);
+    }
 
     @Override
     public void execute() throws CommandException {

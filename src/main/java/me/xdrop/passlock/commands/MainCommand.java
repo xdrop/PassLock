@@ -11,11 +11,18 @@ public class MainCommand {
     @Parameter(names = {"--conf", "-c"})
     private String configFile;
 
+    @Parameter(names = {"--plain", "-p"})
+    private Boolean secureInput;
+
     public String getDbPath() {
         return dbpath;
     }
 
     public String getConfigFile() {
         return configFile;
+    }
+
+    public Boolean isSecureInput() {
+        return secureInput;
     }
 }

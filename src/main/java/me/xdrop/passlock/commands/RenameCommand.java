@@ -4,20 +4,25 @@ import com.beust.jcommander.Parameter;
 import me.xdrop.passlock.core.PasswordManager;
 import me.xdrop.passlock.exceptions.CommandException;
 import me.xdrop.passlock.exceptions.RefNotFoundException;
+import me.xdrop.passlock.io.TextInputOutput;
 
 import java.util.List;
 
 public class RenameCommand extends Command {
-
-    public RenameCommand(PasswordManager passwordManager) {
-        super(passwordManager);
-    }
 
     @Parameter(names = {"--target", "-t"})
     private String targetName;
 
     @Parameter(description = "Reference to rename")
     private List<String> name;
+
+    public RenameCommand(PasswordManager passwordManager) {
+        super(passwordManager);
+    }
+
+    public RenameCommand(PasswordManager passwordManager, TextInputOutput tio) {
+        super(passwordManager, tio);
+    }
 
     @Override
     public void execute() throws CommandException {
