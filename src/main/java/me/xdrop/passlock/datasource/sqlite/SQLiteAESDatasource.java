@@ -154,7 +154,6 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         for (int offset = 1; offset <= pages; offset++) {
 
             List<PasswordEntry<AESEncryptionData>> batch;
-            List<PasswordEntry<AESEncryptionData>> processed;
 
             batch = batchSelect(bufferSize, offset);
 
@@ -166,14 +165,14 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
 
             try {
 
-                processed = bufferedProcessor.process();
+                bufferedProcessor.process();
 
             } catch (Exception e) {
                 LOG.debug("Buffered update error", e);
-                throw new Exception();
+                throw e;
             }
 
-            bufferedProcessor.send(processed);
+            batchUpdate(bufferedProcessor.send());
 
         }
 
@@ -230,6 +229,40 @@ public class SQLiteAESDatasource implements Datasource<AESEncryptionData> {
         }
 
         return null;
+
+    }
+
+    private int batchUpdate(List<PasswordEntry<AESEncryptionData>> updateList) {
+
+        String sql = "UPDATE passwords SET ref=?, description=?, payload=?, salt=?, iv=?, algo=? " +
+                "WHERE ref=?";
+
+        try {
+
+            /* we set autocommit to true, perform all the updates and commit at the end */
+            con.setAutoCommit(false);
+
+            for(PasswordEntry<AESEncryptionData> entry : updateList) {
+
+                PreparedStatement statement = bindPreparedStatement(entry, sql,
+                        entry.getEncryptionData());
+
+                statement.setString(7, entry.getRef());
+
+                statement.executeUpdate();
+
+            }
+
+            con.commit();
+
+            return updateList.size();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
 
     }
 

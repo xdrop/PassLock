@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, AESEncryptionData> {
@@ -166,43 +167,94 @@ public class PasswordManagerAES implements PasswordManager<AESEncryptionModel, A
 
     }
 
-    public void updateMasterPassword(char[] oldMaster, char[] newMaster) {
+    public void updateMasterPassword(char[] oldMasterPassword, char[] newMasterPassword) throws InvalidKeyException {
+
+
+        if (!unlocksMaster(oldMasterPassword)) throw new InvalidKeyException();
+
+
+        LOG.info("Generating AES secret...");
+
+        /* Remember the old master key */
+        char[] oldKey = getMasterKey(oldMasterPassword);
+
+        /* Store the master key */
+        SecretKey secretKey = encryptionModel.generateSecret(newMasterPassword);
+
+        try {
+            LOG.debug("Deleting old master...");
+            datasource.delPass("master");
+
+            addPassword("The master key", secretKey.getEncoded(), newMasterPassword, "master");
+
+            LOG.info("Re-encrypting entries...");
+            updateMasterKey(oldKey, ByteUtils.getChars(secretKey.getEncoded()));
+
+        } catch (AlreadyExistsException | RefNotFoundException ignored) { /* can't happen */ }
+
+        LOG.info("AES secret successfully stored!");
+
+    }
+
+    public void updateMasterKey(final char[] oldMasterKey, final char[] newMasterKey) throws InvalidKeyException {
 
         BufferedProcessor<PasswordEntry<AESEncryptionData>> updateTask;
 
         updateTask = new BufferedProcessor<PasswordEntry<AESEncryptionData>>() {
 
-            @Override
-            public void setBufferSize(int size) {
-
-            }
+            List<? extends PasswordEntry<AESEncryptionData>> in;
+            List<PasswordEntry<AESEncryptionData>> out;
 
             @Override
             public int getBufferSize() {
-                return 0;
+                return 500;
             }
 
             @Override
             public void receive(List<? extends PasswordEntry<AESEncryptionData>> in) {
+                this.in = in;
+                this.out = new ArrayList<>();
+            }
+
+            @Override
+            public void process() throws Exception {
+
+                for(PasswordEntry<AESEncryptionData> entry : in) {
+
+                    if (entry.getRef().equalsIgnoreCase("master")) continue;
+                    byte[] oldPayload;
+
+                    try {
+                        oldPayload = encryptionModel.decrypt(entry.getEncryptionData(), oldMasterKey);
+                    } catch (InvalidKeyException e) {
+                        continue;
+                    }
+
+                    AESEncryptionData newEncryptionData = encryptionModel.encrypt(oldPayload, newMasterKey);
+
+                    PasswordEntry<AESEncryptionData> passwordEntry = entry.clone();
+                    passwordEntry.setEncryptionData(newEncryptionData);
+
+                    this.out.add(passwordEntry);
+
+                }
 
             }
 
             @Override
-            public List<PasswordEntry<AESEncryptionData>> process() throws Exception {
-                return null;
+            public List<PasswordEntry<AESEncryptionData>> send() {
+                return this.out;
             }
 
-            @Override
-            public void send(List<? extends PasswordEntry<AESEncryptionData>> out) {
-
-            }
 
         };
 
         try {
             datasource.bufferedUpdate(updateTask);
+        } catch (InvalidKeyException e) {
+            throw e;
         } catch (Exception e) {
-
+            LOG.error("Unexpected exception during re-encryption", e);
         }
 
     }

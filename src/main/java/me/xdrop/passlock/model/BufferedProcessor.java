@@ -4,14 +4,12 @@ import java.util.List;
 
 public interface BufferedProcessor<T> {
 
-    void setBufferSize(int size);
-
     int getBufferSize();
     
     void receive(List<? extends T> in);
     
-    List<T> process() throws Exception;
-    
-    void send(List<? extends T> out);
+    void process() throws Exception;
+
+    List<T> send();
     
 }

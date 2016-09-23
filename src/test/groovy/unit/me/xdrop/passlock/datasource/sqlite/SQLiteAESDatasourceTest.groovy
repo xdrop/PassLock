@@ -119,7 +119,7 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
     void testBufferedUpdate() {
 
         def batch = 500;
-        def total = 1444;
+        def total = 1500;
         def remainder = (total % batch) + 1;
 
         for (int i = 0; i < total; i++){
@@ -128,7 +128,7 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
         }
 
         def bu = mock(BufferedProcessor)
-        def capturedList = new Capture<List>(CaptureType.ALL);
+        def capturedList = new Capture<List<PasswordEntry<AESEncryptionData>>>(CaptureType.ALL);
 
         expect(bu.getBufferSize())
             .andReturn(batch)
@@ -141,14 +141,20 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
             .times(times)
 
         expect(bu.process())
-            .andReturn([])
-            .times(times)
-
-        expect(bu.send([]))
             .andVoid()
             .times(times)
 
+        expect(bu.send())
+            .andAnswer({
+                capturedList.values[0][22].encryptionData.initilizationVector =
+                        ByteUtils.getBytes("demo".toCharArray());
+                capturedList.values[0]
+            })
+            .times(times)
+
         replay(bu)
+
+        print datasource.getPass("21").encryptionData.initilizationVector
 
         datasource.bufferedUpdate(bu);
 
@@ -157,6 +163,8 @@ class SQLiteAESDatasourceTest extends LogGroovyTestCase {
         }
 
         assert capturedList.values.get(capturedList.values.size() - 1).size() == remainder
+
+        assert datasource.getPass("21").encryptionData.initilizationVector == ByteUtils.fromBase64("ZGVtbw==")
 
 
     }

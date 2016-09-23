@@ -1,6 +1,6 @@
 package me.xdrop.passlock.model;
 
-public class EncryptionData {
+public class EncryptionData implements Cloneable {
 
     private byte[] encryptedPayload;
 
@@ -28,5 +28,17 @@ public class EncryptionData {
 
     public void setEncryptedPayload(byte[] encryptedPayload) {
         this.encryptedPayload = encryptedPayload;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        super.clone();
+
+        EncryptionData clone = new EncryptionData();
+        clone.setEncryptedPayload(this.getEncryptedPayload());
+        clone.setSalt(this.getSalt());
+        return clone;
+
     }
 }
