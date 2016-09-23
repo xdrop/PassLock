@@ -100,7 +100,7 @@ public class PassLock {
         }
 
         if (cm.isSecureInput() != null){
-            tio.setSecure(cm.isSecureInput());
+            tio.setSecure(!cm.isSecureInput());
         }
 
         GUtils.createIfDoesntExist(datasourcePath);
