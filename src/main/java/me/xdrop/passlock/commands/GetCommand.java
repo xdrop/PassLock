@@ -130,7 +130,7 @@ public class GetCommand extends Command {
             char[] masterKey = passwordManager.getMasterKey(masterPassword);
             byte[] pass = passwordManager.getPassword(ref, masterKey);
 
-            tio.writeln("Your password is:");
+            tio.writeln("\nYour password is:");
             tio.writeSecureLn(pass);
             tio.writeln("");
 

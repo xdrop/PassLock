@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -30,7 +31,7 @@ public class SQLitePrepare {
      */
     public static void resetTable(Connection sqLiteConnection) {
 
-        String sql = "DROP TABLE IF EXISTS passwords";
+        String sql = "DROP TABLE passwords";
 
         performSingleTransaction(sqLiteConnection, sql);
 
@@ -39,17 +40,25 @@ public class SQLitePrepare {
     }
 
     private static void performSingleTransaction(Connection sqLiteConnection, String sql) {
-        Statement statement = null;
+        PreparedStatement statement = null;
 
         try {
 
-            statement = sqLiteConnection.createStatement();
-            statement.executeUpdate(sql);
+            statement = sqLiteConnection.prepareStatement(sql);
+            statement.executeUpdate();
             statement.close();
 
         } catch (SQLException e) {
-
             LOG.debug("SQL exception occurred", e);
+        } finally {
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    LOG.debug("Failed to close statement", e);
+                }
+            }
 
         }
 
