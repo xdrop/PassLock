@@ -85,6 +85,10 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
 
         assert "encryptme".getBytes("UTF-8") == pwman.getPassword("new", "nonaesmaster".toCharArray())
 
+        shouldFail(RefNotFoundException) {
+            pwman.rename("master","anything")
+        }
+
     }
 
     void testUpdate() {
@@ -102,6 +106,7 @@ class PasswordManagerAESIT extends LogGroovyTestCase {
         shouldFail(RefNotFoundException) {
 
             pwman.getPassword("def")
+            pwman.deletePassword("master")
 
         }
 
