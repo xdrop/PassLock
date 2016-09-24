@@ -9,9 +9,6 @@ import java.util.List;
 
 public class ListCommand extends Command {
 
-    @Parameter(names = {"-m"})
-    private String masterPass;
-
     public ListCommand(PasswordManager passwordManager) {
         super(passwordManager);
     }
@@ -23,14 +20,7 @@ public class ListCommand extends Command {
     @Override
     public void execute() throws CommandException {
 
-        char[] masterPassword;
-
-        if(masterPass == null) {
-            tio.write("Please enter your master password: ");
-            masterPassword = tio.getSecure();
-        } else{
-            masterPassword = masterPass.toCharArray();
-        }
+        char[] masterPassword = promptMasterPassword();
 
         if(!passwordManager.unlocksMaster(masterPassword)) {
             throw new CommandException("Invalid master password");

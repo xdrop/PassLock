@@ -23,9 +23,6 @@ public class AddCommand extends Command {
     @Parameter(description = "Name/Reference to entry")
     private List<String> name;
 
-    @Parameter(names = {"-m"})
-    private String masterPass;
-
     public AddCommand(PasswordManager passwordManager, TextInputOutput tio) {
         super(passwordManager, tio);
     }
@@ -42,14 +39,7 @@ public class AddCommand extends Command {
 
         String ref = name.get(0);
 
-        char[] masterPassword;
-
-        if(masterPass == null) {
-            tio.write("Please enter your master password: ");
-            masterPassword = tio.getSecure();
-        } else{
-            masterPassword = masterPass.toCharArray();
-        }
+        char[] masterPassword = promptMasterPassword();
 
         char[] masterKey;
 
